@@ -1,6 +1,8 @@
 <template>
   <div class="menu">
-    我是菜单组建
+    <div class="left"><slot name="left"></slot></div>
+    <div class="center"><slot name="center"></slot></div>
+    <div class="right"><slot name="right"></slot></div>
   </div>
 </template>
 
@@ -10,6 +12,23 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
+  .menu{
+    display: flex;
+    width: 100%;
+    height: 75px;
+    line-height: 75px;
+    background-color: #002236;
+  }
+  .left{
+    flex: 2;
+    height: 75px;
+  }
+  .right{
+    flex: 1;
+  }
+  .center{
+    flex: 3;
+  }
 
 </style>
