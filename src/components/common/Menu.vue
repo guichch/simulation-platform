@@ -21,14 +21,16 @@ export default {
     background-color: #002236;
   }
   .left{
-    flex: 2;
-    height: 75px;
+    flex: 1.5;
+    /* height: 75px; */
   }
   .right{
-    flex: 1;
+    flex: 1.5;
+    /* text-align: center; */
   }
   .center{
     flex: 3;
+    /* text-align: center; */
   }
 
 </style>

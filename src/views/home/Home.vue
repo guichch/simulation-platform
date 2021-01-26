@@ -29,5 +29,7 @@ export default {
 </script>
 
 <style>
-
+  .home-box{
+    position: relative;
+  }
 </style>
