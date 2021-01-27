@@ -35,7 +35,7 @@ export default {
 </script>
 
 <style>
-.reset, .submit{
-
-}
+  .select-area{
+    margin-left: 20px;
+  }
 </style>

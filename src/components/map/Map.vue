@@ -1,17 +1,19 @@
 <template>
   <div class="map-container">
-    <keep-alive>
+    
+<!--     <keep-alive>
       <router-view></router-view>
-    </keep-alive>
-    <right-panel></right-panel>
+    </keep-alive> -->
+    
   </div>
 </template>
 
 <script>
-import RightPanel from '../righttool/RightPanel.vue'
+import L from "leaflet";
+import "leaflet.chinesetmsproviders";
+import { Lmap } from "@/common/Map/init2dMap";
 export default {
   components: {
-    RightPanel
   }
 }
 </script>

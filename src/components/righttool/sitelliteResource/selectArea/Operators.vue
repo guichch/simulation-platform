@@ -131,7 +131,6 @@ export default {
 <style scoped>
 .operators{
   margin-bottom: 30px;
-  margin-left: 20px;
 }
 .title {
   font-size: 13pt;

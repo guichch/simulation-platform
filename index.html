@@ -5,19 +5,30 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Document</title>
   <style>
-    div{
+    .box{
+      width: 200px;
       height: 200px;
       background-color: #bfa;
-      float: right;
+      /* float: right; */
+      position: relative;
+      overflow-y: auto;
+      margin: 0 auto;
+    }
+    .son{
+      position: absolute;
+      width: 100px;
+      height: 10px;
+      border: 10px solid red;
+      right: 120px;
+      z-index: 2;
     }
   </style>
 </head>
 <body>
-  <div>
-    <span>
-      woshispan
-    </span>
-    <input type="text">
+  <div class="box">
+    <div class="son">
+
+    </div>
   </div>
 </body>
 </html>

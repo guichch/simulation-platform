@@ -14,7 +14,7 @@ export default {
   data() {
     return {
       selectMode: ['空间选择', '区域选择', '经纬度选择'],
-      currentIndex: null
+      currentIndex: 0
     }
   },
   methods: {
@@ -27,7 +27,6 @@ export default {
 
 <style scoped>
 .coverage{
-  margin-left: 20px;
   margin-bottom: 30px;
 }
 .title {

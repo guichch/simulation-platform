@@ -11,13 +11,17 @@
 
 <script>
 export default {
-
+  data() {
+    return {
+      startTime: null,
+      endTime: null
+    }
+  }
 }
 </script>
 
 <style scoped>
 .launch-time{
-  margin-left: 20px;
   margin-bottom: 30px;
 }
 .title {

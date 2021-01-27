@@ -13,7 +13,7 @@ export default {
 
 <style scoped>
   .satellite-name{
-    margin: 30px 0 30px 20px;
+    margin: 30px 0;
   }
   span{
     color: #6A8BE6;

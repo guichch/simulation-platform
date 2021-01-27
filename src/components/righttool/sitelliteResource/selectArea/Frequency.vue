@@ -69,7 +69,6 @@ export default {
 
 <style scoped>
 .frequency {
-  margin-left: 20px;
   margin-bottom: 30px;
 }
 .title {

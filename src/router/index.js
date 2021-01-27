@@ -2,8 +2,20 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 const login = () => import('../views/login/login.vue')
 const Home = () => import('../views/home/Home.vue')
-import map3dRouter from './map3dRouter'
-import map2dRouter from './map2dRouter'
+/* import map3dRouter from './map3dRouter'
+import map2dRouter from './map2dRouter' */
+const SatelliteList = () => import('@/components/righttool/sitelliteResource/showArea/SatelliteList')
+const StstemIndicators = () => import('@/components/righttool/sitelliteResource/showArea/SystemIndicators')
+const EarthList = () => import('@/components/righttool/sitelliteResource/showArea/EarthList')
+const Broadcasting = () => import('@/components/righttool/sitelliteResource/showArea/Broadcasting')
+const Onboard = () => import('@/components/righttool/sitelliteResource/showArea/Onboard')
+const Emergency = () => import('@/components/righttool/sitelliteResource/showArea/Emergency')
+
+// 解决重复点击导航路由报错
+const originalPush = VueRouter.prototype.push;
+VueRouter.prototype.push = function push(location) {
+  return originalPush.call(this, location).catch(err => err);
+}
 
 
 Vue.use(VueRouter)
@@ -21,8 +33,30 @@ const routes = [
     path: '/home',
     component: Home,
     children: [
-      map3dRouter,
-      map2dRouter
+      {
+        path: 'satellitelist',
+        component: SatelliteList
+      },
+      {
+        path: 'systemindicators',
+        component: StstemIndicators
+      },
+      {
+        path: 'onboard',
+        component: Onboard
+      },
+      {
+        path: 'earthlist',
+        component: EarthList
+      },
+      {
+        path: 'broadcasting',
+        component: Broadcasting
+      },
+      {
+        path: 'emergency',
+        component: Emergency
+      },
     ]
   }
 ]
