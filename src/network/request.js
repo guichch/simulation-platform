@@ -1,10 +1,10 @@
 import axios from 'axios'
 
-export function USER_SERVER(config) {
+export function request(config) {
     const instance = axios.create({
-        baseURL: 'http://121.31.6.255:8117/sysman-fast/sys',
+        // baseURL: 'http://121.31.6.255',
         timeout: 5000,
-        method: 'post'
+        
     });
 
     instance.interceptors.response.use(res => {

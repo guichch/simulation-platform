@@ -1,23 +1,19 @@
 <template>
   <div class="map-container">
-    
-<!--     <keep-alive>
-      <router-view></router-view>
-    </keep-alive> -->
-    
+    <router-view></router-view>
   </div>
 </template>
 
 <script>
-import L from "leaflet";
-import "leaflet.chinesetmsproviders";
-import { Lmap } from "@/common/Map/init2dMap";
 export default {
-  components: {
-  }
+
 }
 </script>
 
 <style>
-
+  .map-container{
+    width: 100%;
+    height: calc(100vh - 75px);
+    overflow: hidden;
+  }
 </style>

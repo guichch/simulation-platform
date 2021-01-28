@@ -38,7 +38,7 @@
 </template>
 
 <script>
-import { USER_SERVER } from "network/request.js";
+import {request} from '@/network/request'
 export default {
   data() {
     return {
@@ -50,14 +50,14 @@ export default {
 
   methods: {
     loginsubmit() {
-      USER_SERVER({
-        url: "/login",
+      request({
+        url: this.$store.state.USER_SERVER + '/login',
         data: {
           username: this.username,
           password: this.password,
         },
-      })
-        .then((res) => {
+        method: 'post'
+      }).then((res) => {
           if (res.token) {
             this.$router.push({
               path: "/home",
@@ -81,6 +81,6 @@ export default {
 </script>
 
 <style>
-  @import url("~assets/css/iconfont/iconfont.css");
-  @import url("~assets/css/login.css");
+@import url("~assets/css/iconfont/iconfont.css");
+@import url("~assets/css/login.css");
 </style>

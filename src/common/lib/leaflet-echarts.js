@@ -1,7 +1,7 @@
 import L from "leaflet";
 import echarts from "echarts"
 import 'echarts/lib/chart/lines'
-// import "echarts/map/js/world"
+import "echarts/map/js/world"
 
 
 (L.OverlayEcharts = (L.version < "1.0" ? L.Class : L.Layer).extend({

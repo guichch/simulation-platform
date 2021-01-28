@@ -2,8 +2,9 @@
   <div id="home-box">
     <home-menu />
     <tab />
-    <right-panel />
     <Map />
+    <right-panel-tab></right-panel-tab>
+    <right-panel />
     <foot-status />
     <time-line />
     <chart-panel />
@@ -18,6 +19,7 @@ import TimeLine from "@/components/timeline/TimeLine.vue";
 import ChartPanel from "@/components/lefttool/ChartPanel.vue";
 import RightPanel from '@/components/righttool/RightPanel.vue'
 import Map from '@/components/map/Map.vue';
+import RightPanelTab from '@/components/righttool/RightPanelTab.vue';
 export default {
   components: {
     HomeMenu,
@@ -26,7 +28,8 @@ export default {
     TimeLine,
     ChartPanel,
     RightPanel,
-    Map
+    Map,
+    RightPanelTab
   }
 };
 </script>

@@ -49,6 +49,7 @@ export default {
     /* background-color: #02182f; */
     left: 50%;
     transform: translateX(-50%);
+    z-index: 999;
   }
   ul{
     padding: 0;

@@ -1,7 +1,7 @@
 <template>
   <div class="show-area">
     <tab-control :tab='tab'></tab-control>
-    <router-view></router-view>
+    <!-- <router-view></router-view> -->
   </div>
 </template>
 
@@ -23,7 +23,7 @@ export default {
   .show-area{
     margin: 20px;
     border: 1px solid #0e94ea;
-    /* height: 100px; */
+    /* height: 1000px; */
     color: #a1aeb3;
     /* overflow-x: hidden; */
     /* padding-top: 30px; */
