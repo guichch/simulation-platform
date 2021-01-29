@@ -6,7 +6,7 @@
     </h1>
 
     <form action="">
-      <i class="iconfont icon-ren" style="color: white"></i>
+      <i class="iconfont icon-ziyuanxhdpi" style="color: white"></i>
       <input type="text" placeholder="请输入您的账号" v-model="username" />
       <div class="line"></div>
       <i class="iconfont icon-suo" style="color: white"></i>
@@ -81,6 +81,5 @@ export default {
 </script>
 
 <style>
-@import url("~assets/css/iconfont/iconfont.css");
 @import url("~assets/css/login.css");
 </style>

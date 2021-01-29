@@ -9,7 +9,6 @@ export const getSatCollection = (map) => {
   if (sessionStorage.getItem("allSatCollection") == null) { //如果缓存中没有卫星数据的话
     getWXResource().then(res => {
       if (res.length > 0) {
-        console.log(res)
         searchedSatCollection = res;
         sessionStorage.setItem("allSatCollection", JSON.stringify(searchedSatCollection)) //保存到缓存中
         WeiXingGuiDao(searchedSatCollection, map, true) //添加卫星点以及轨道

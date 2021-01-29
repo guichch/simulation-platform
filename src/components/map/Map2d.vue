@@ -28,11 +28,12 @@ export default {
     // 初始化卫星
     getSatCollection("2dmap");
     markersAll.forEach((marker) => {
-/*       marker.on("click", function (e) {
-        mySelf.$refs.satelliteResources_wxzy_xq.clickRow =
-          e.target.options.attribute;
-        mySelf.$refs.satelliteResources_wxzy_xq.satelliteResources_wxzy_xqShow = true;
-      }); */
+      marker.on("click", function (e) {
+        console.log(this)
+      
+        mySelf.$store.commit('startPanel');
+        mySelf.$store.commit('setParams', this);
+      });
       marker.on("mouseover", function (e) {
         var satNameDiv = document.getElementById("satellite-name");
         satNameDiv.style.display = "block";

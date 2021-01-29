@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
+import mutations from './mutations/mutations'
 
 Vue.use(Vuex)
 
@@ -15,6 +16,7 @@ const GEO_SERVER = 'http://' + SERVER2 + ':8020'
 export default new Vuex.Store({
   state: {
     isSelected: true,
+    
     POST_GIS_SERVER,
     USER_SERVER,
     REGISTER,
@@ -23,18 +25,15 @@ export default new Vuex.Store({
     API_SERVER_URL: API_SERVER + '/wt',
     GEO_SERVER,
     PROXY_SERVER,
+    satInfo: {
+      isShowPanel: false,
+      params: '',
+    }
   },
   getters: {
 
   },
-  mutations: {
-    showSitelliteResource(state) {
-      state.isSelected = true
-    },
-    showThematicData(state) {
-      state.isSelected = false
-    }
-  },
+  mutations,
   actions: {
   },
   modules: {

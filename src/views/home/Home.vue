@@ -5,9 +5,10 @@
     <Map />
     <right-panel-tab></right-panel-tab>
     <right-panel />
+    <chart-panel />
     <foot-status />
     <time-line />
-    <chart-panel />
+    
   </div>
 </template>
 
