@@ -14,6 +14,6 @@ export default {
   .map-container{
     width: 100%;
     height: calc(100vh - 75px);
-    overflow: hidden;
+    /* overflow: hidden; */
   }
 </style>

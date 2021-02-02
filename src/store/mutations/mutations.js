@@ -13,6 +13,15 @@ const mutations = {
   },
   setParams(state, payload) {
     state.satInfo.params = payload.options.attribute
+  },
+  setParamsEasy(state, payload) {
+    state.satInfo.params = payload;
+  },
+  showAllSat(state) {
+    state.isShowAllSat = true
+  },
+  closeAllSat(state) {
+    state.isShowAllSat = false
   }
 }
 

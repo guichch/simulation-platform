@@ -3,9 +3,11 @@
     <div class="title">
       <span>发射时间</span>
     </div>
-    <input type="date" value-format="yyyy-MM-dd" size="mini" placeholder="开始时间" v-model="startTime">
+    <el-date-picker v-model="startTime" type="date" :picker-options="startPickOptions">
+    </el-date-picker>
     <span class="zhi">至</span>
-    <input type="date" value-format="yyyy-MM-dd" size="mini" placeholder="结束时间" v-model="endTime">
+    <el-date-picker v-model="endTime" type="date" :picker-options="endPickOptions">
+    </el-date-picker>
   </div>
 </template>
 
@@ -13,15 +15,33 @@
 export default {
   data() {
     return {
-      startTime: null,
-      endTime: null
-    }
-  }
-}
+      startTime: '',
+      endTime: '',
+      startPickOptions: {
+        disabledDate: time => {
+          if (this.endTime) {
+            return time.getTime() >= this.endTime.getTime()
+          } else {
+            return time.getTime() >= Date.now()
+          }
+        }
+      },
+      endPickOptions: {
+        disabledDate: time => {
+          if (this.startTime) {
+            return time.getTime() >= Date.now() || time.getTime() <= this.startTime.getTime()
+          } else {
+            return time.getTime() >= Date.now()
+          }
+        }
+      }
+    };
+  },
+};
 </script>
 
-<style scoped>
-.launch-time{
+<style scoped lang='scss'>
+.launch-time {
   margin-bottom: 30px;
 }
 .title {
@@ -34,8 +54,24 @@ export default {
   padding-left: 10px;
 }
 
-.zhi{
-  margin: 0 10px;
+.launch-time /deep/ .el-input{
+  width: 140px;
+}
+
+.launch-time /deep/ .el-input__inner {
+  background-color: transparent;
+  border: none;
   color: #fff;
+  border-bottom: 1px solid #7c8e97;
+  border-radius: 0;
+}
+
+.launch-time /deep/ .el-input__inner:focus {
+  border-bottom-color: #409eff;
+}
+
+.zhi{
+  color: white;
+  margin: 0 5px;
 }
 </style>

@@ -3,8 +3,18 @@ import App from './App.vue'
 import router from './router'
 import store from './store'
 import 'normalize.css'
+
+
+// 地图插件
 import 'leaflet/dist/leaflet.css'
-import "@/assets/css/iconfont/iconfont.css"
+
+
+// elementUI
+import ElementUI from 'element-ui'
+import 'element-ui/lib/theme-chalk/index.css';
+Vue.use(ElementUI);
+
+
 
 Vue.config.productionTip = false
 

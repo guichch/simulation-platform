@@ -2,7 +2,7 @@ import axios from 'axios'
 
 export function request(config) {
     const instance = axios.create({
-        // baseURL: 'http://121.31.6.255',
+        method: 'post',
         timeout: 5000,
         
     });

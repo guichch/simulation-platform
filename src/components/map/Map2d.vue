@@ -11,7 +11,7 @@ import { initMap } from "@/common/Map/init2dMap";
 import {
   getSatCollection,
   markersAll,
-} from "@/common/Map/ElevationLines/wxOrbital";
+} from "@/common/Map/ElevationLines/satOrbital";
 export default {
   name: "Map2D",
   components: {
@@ -28,9 +28,7 @@ export default {
     // 初始化卫星
     getSatCollection("2dmap");
     markersAll.forEach((marker) => {
-      marker.on("click", function (e) {
-        console.log(this)
-      
+      marker.on("click", function () {    
         mySelf.$store.commit('startPanel');
         mySelf.$store.commit('setParams', this);
       });

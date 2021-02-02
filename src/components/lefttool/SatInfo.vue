@@ -1,9 +1,9 @@
 <template>
-  <div class="satellite-information" @click="panelClick" v-show="isShowPanel">
+  <div class="satellite-information" v-show="isShowPanel">
     <div class="title">
       <span>卫星详情</span>
-      <i class="iconfont icon-guanbi" @click='guanbi'></i>
-      <i class="iconfont icon-zuixiaohua"></i>
+      <i class="el-icon-close" @click="closePanel"></i>
+      <i class="el-icon-minus" @click="hidePanel"></i>
     </div>
     <div class="separator"></div>
     <div class="content">
@@ -25,77 +25,42 @@
       </div>
       <div class="satInfo" v-if="isActive">
         <div class="sat">
-          <p class="satName">卫星名称：{{satParams.satEName}}</p>
+          <p class="satName">卫星名称：{{ satParams.satEName }}</p>
         </div>
         <div class="satDetails">
           <table>
             <tr>
-              <td>卫星轨位：{{satOrbit}}</td>
-              <td>COSPAR：{{satParams.satCospar}}</td>
-              <td>NORAD：{{satParams.satNorad}}</td>
+              <td>卫星轨位：{{ satOrbit }}</td>
+              <td>COSPAR：{{ satParams.satCospar }}</td>
+              <td>NORAD：{{ satParams.satNorad }}</td>
             </tr>
             <tr>
-              <td>卫星运营商：{{satParams.satOperator}}</td>
-              <td>发射时间：{{satLaunchTime}}</td>
-              <td>卫星寿命：{{satParams.satLife}}</td>
+              <td>卫星运营商：{{ satParams.satOperator }}</td>
+              <td>发射时间：{{ satLaunchTime }}</td>
+              <td>卫星寿命：{{ satParams.satLife }}</td>
             </tr>
           </table>
           <div>
-            <span>卫星平台：{{satParams.satPlatform}}</span>
+            <span>卫星平台：{{ satParams.satPlatform }}</span>
           </div>
           <div class="satManu">
-            <span>制造商：{{satParams.satManufacturer}}</span>
+            <span>制造商：{{ satParams.satManufacturer }}</span>
           </div>
           <div class="condition-selection">
             <div class="satCov">
               <span style="clear: both">卫星覆盖：</span>
-              <div class="select-frequency" @click.stop="freClick">
-                <input
-                  type="text"
-                  placeholder="请选择频段"
-                  v-model="selected[1]"
-                  readonly
-                  ref="bbb"
-                />
-                <img
-                  src="@/assets/img/arrow.png"
-                  style="width: 14px"
-                  class="arr"
-                />
-              </div>
-              <div class="select-area" @click.stop="areaClick">
-                <input
-                  type="text"
-                  placeholder="请选择区域"
-                  v-model="selected[0]"
-                  readonly
-                  ref="aaa"
-                />
-                <img
-                  src="@/assets/img/arrow.png"
-                  alt=""
-                  style="width: 14px"
-                  class="arr"
-                />
-              </div>
-              <div style="overflow: visibile">
-                <div v-show="isShowArea">
-                  <ul class="selected-area">
-                    <li>全部</li>
-                    <li>China</li>
-                    <li>Global</li>
-                  </ul>
-                  <div class="tri"></div>
-                </div>
-              </div>
-              <div v-show="isShowFre">               
-                <ul class="selected-fre">
-                  <li>全部</li>
-                  <li>C</li>
-                  <li>Ku</li>
-                </ul>
-                <div class="tri"></div>
-              </div>
+              <el-select v-model="value1" placeholder="请选择区域" clearable> 
+                <el-option label='全部' value='all'></el-option>
+                <el-option label='中国' value='China'></el-option>
+                <el-option label='美国' value='America'></el-option>
+              </el-select>
+              <el-select v-model="value2" placeholder="请选择频段" clearable>
+                <el-option label='全部' value='all'></el-option>
+                <el-option label='C' value='C'></el-option>
+                <el-option label='Ku' value='Ku'></el-option>
+                <el-option label='Ka' value='Ka'></el-option>
+                <el-option label='其他' value='others'></el-option>
+              </el-select>
             </div>
             <div class="limit">
               <span>上下界限制：</span>
@@ -188,8 +153,8 @@ export default {
       selectedIndi: [],
       selectedType: "",
       isActive: true,
-      isShowArea: false,
-      isShowFre: false,
+      value1: "",
+      value2: "",
     };
   },
   computed: {
@@ -201,52 +166,33 @@ export default {
     },
     satOrbit() {
       if (this.$store.state.satInfo.params.satPosition < 0) {
-        return -this.$store.state.satInfo.params.satPosition + '°W'
+        return -this.$store.state.satInfo.params.satPosition + "°W";
       } else if (this.$store.state.satInfo.params.satPosition > 0) {
-        return this.$store.state.satInfo.params.satPosition + '°E'
-      }else {
-        return 0 + '°'
+        return this.$store.state.satInfo.params.satPosition + "°E";
+      } else {
+        return 0 + "°";
       }
-      
     },
     satLaunchTime() {
       if (this.$store.state.satInfo.params.satLaunchTime != undefined) {
-        return this.$store.state.satInfo.params.satLaunchTime.split(" 00:00:00")[0]
-      }else {
-        return 'unknown'
+        return this.$store.state.satInfo.params.satLaunchTime.split(
+          " 00:00:00"
+        )[0];
+      } else {
+        return "unknown";
       }
-    }
-
+    },
   },
   methods: {
     btnClick(item) {
       this.isActive = item === "info";
     },
-    areaClick() {
-      this.$refs.aaa.style = this.$refs.aaa.style['borderBottomColor'] == 'rgb(64, 158, 255)' ? 'border-bottom-color: #909399' : 'border-bottom-color: #409eff'
-      this.isShowArea = !this.isShowArea;
-      this.isShowFre = false;
-      this.$refs.bbb.style = 'border-bottom-color: #909399'
+    closePanel() {
+      this.$store.commit("endPanel");
     },
-    freClick() {
-      this.$refs.bbb.style = this.$refs.bbb.style['borderBottomColor'] == 'rgb(64, 158, 255)' ? 'border-bottom-color: #909399' : 'border-bottom-color: #409eff'
-      this.isShowFre = !this.isShowFre;
-      this.isShowArea = false;
-      this.$refs.aaa.style = 'border-bottom-color: #909399'
+    hidePanel() {
+      console.log(1);
     },
-    panelClick() {
-      if (this.isShowArea) {
-        this.isShowArea = false;
-        this.$refs.aaa.style = 'border-bottom-color: #909399'
-      }
-      if (this.isShowFre){
-        this.isShowFre = false;
-        this.$refs.bbb.style = 'border-bottom-color: #909399'
-      }  
-    },
-    guanbi() {
-      this.$store.commit('endPanel')
-    }
   },
 };
 </script>
@@ -317,7 +263,7 @@ export default {
   text-align: center;
 }
 
-.satName{
+.satName {
   color: white;
   font-size: 14px;
   margin: 0;
@@ -351,6 +297,7 @@ input[type="text"] {
   background-color: #002236;
   border-bottom: 1px solid #909399;
   padding-left: 20px;
+  color: #fff;
 }
 
 input:focus {
@@ -377,69 +324,19 @@ input::placeholder {
   margin-left: 20px;
 }
 
-.select-area,
-.select-frequency {
-  float: right;
+.el-select{
+  width: 160px;
+  margin-right: 15px;
 }
 
-.arr {
-  transform: translateX(-20px);
+.el-select /deep/ .el-input__inner{
+  width: 160px;
+  background-color: transparent;
+  border: none;
+  color: #fff;
+  text-align: center;
+  border-bottom: 1px solid #909399;
+  border-radius: 0;
 }
 
-.satCov {
-  position: relative;
-}
-
-.selected-area,
-.selected-fre {
-  /* display: none; */
-  background-color: #fff;
-  border-radius: 4px;
-  position: absolute;
-  width: 140px;
-  color: #606266;
-  line-height: 34px;
-  font-size: 14px;
-  margin: 0;
-  padding: 10px;
-}
-
-ul li {
-  list-style: none;
-  cursor: pointer;
-}
-
-li:hover {
-  background-color: #f5f7fa;
-}
-
-.tri {
-  width: 0;
-  height: 0;
-  position: absolute;
-  border-left: 5px solid transparent;
-  border-right: 5px solid transparent;
-  border-bottom: 10px solid white;
-  /* margin-left: 130px; */
-}
-
-.selected-area{
-  left: 100px;
-  top: 60px;
-}
-
-.selected-fre{
-  left: 280px;
-  top: 60px;
-}
-
-.selected-area + .tri{
-  left: 140px;
-  top: 50px;
-}
-
-.selected-fre + .tri{
-  left: 315px;
-  top: 50px;
-}
 </style>

@@ -4,20 +4,27 @@
       <template #left>
         <img src="@/assets/img/logo.png" alt="" class="logo" />
         <h1>星地一体化仿真平台</h1>
-        <img src="@/assets/img/tip.png" alt="" class="tip"/>
+        <img src="@/assets/img/tip.png" alt="" class="tip" />
       </template>
       <template #center>
         <div class="title">卫星资源能力分析</div>
         <!-- <span class="title">卫星资源能力分析</span> -->
       </template>
       <template #right>
-        <a href="http://www.baidu.com" class="home-link">首页</a>
-        <div class="administration">
-          
-          <span>系统管理</span>
-          <img src="@/assets/img/arrow.png" alt="">
-          <!-- <img src="@/assets/img/arrow.png" alt="" v-else> -->
-        </div>
+        <el-menu
+          mode="horizontal"
+          background-color="#002236"
+          text-color="#fff"
+          active-text-color="#0F2D6B"
+        >
+          <el-menu-item index='1'>
+            首页
+          </el-menu-item>
+          <el-submenu index='2'>
+            <template slot="title">系统管理</template>
+            <el-menu-item index='2-1'>退出账户</el-menu-item>
+          </el-submenu>
+        </el-menu>
       </template>
     </Menu>
   </div>
@@ -31,20 +38,20 @@ export default {
   },
   data() {
     return {
-      isHover: true
-    }
-  }
+      isHover: true,
+    };
+  },
 };
 </script>
 
-<style scoped>
+<style scoped lang='scss'>
 .logo {
   width: 50px;
   margin: 0px 20px;
   vertical-align: middle;
 }
 h1 {
-  font-size: 1.5vw;
+  font-size: 1.2vw;
   color: white;
   display: inline-block;
   margin: 0;
@@ -56,35 +63,16 @@ h1 {
 }
 
 .title {
-  font-size: 1.5vw;
+  font-size: 1.3vw;
   color: white;
   text-align: center;
 }
 
-.administration{
-  color: white;
-  float: left;
-  cursor: pointer;
-}
-
-.administration span{
-  margin-right: 5px;
-}
-
-.administration img{
-  transition: transform 100ms 50ms;
-}
-
-.administration:hover img{
-  transform: rotate(180deg);
-  
-}
-
-.home-link{
-  color: white;
-  margin-right: 20px;
-  display: block;
-  float: left;
-  text-decoration: none;
+.menu .el-row,
+.menu .el-col,
+.menu .el-menu,
+.menu .el-menu li,
+.menu .el-menu li.el-submenu .el-submenu__title{
+  height: 100%;
 }
 </style>

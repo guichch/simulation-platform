@@ -1,4 +1,4 @@
-import { getWXResource } from "@/network/wtResource"
+import { getSatResource } from "@/network/satResource"
 import { Lmap } from "../init2dMap"
 import L from 'leaflet'
 export let searchedSatCollection, satMarkers, marker;
@@ -7,7 +7,7 @@ let objWXZY;
 //获取全部卫星
 export const getSatCollection = (map) => {
   if (sessionStorage.getItem("allSatCollection") == null) { //如果缓存中没有卫星数据的话
-    getWXResource().then(res => {
+    getSatResource().then(res => {
       if (res.length > 0) {
         searchedSatCollection = res;
         sessionStorage.setItem("allSatCollection", JSON.stringify(searchedSatCollection)) //保存到缓存中
