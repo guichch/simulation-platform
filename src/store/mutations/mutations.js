@@ -22,6 +22,19 @@ const mutations = {
   },
   closeAllSat(state) {
     state.isShowAllSat = false
+  },
+  // 右侧面板卫星信息
+  getSelectedSatName(state, payload) {
+    state.rightPanel.selectedSatName = payload;
+  },
+  getSelectedOperator(state, payload) {
+    state.rightPanel.selectedOperator = payload;
+  },
+  getSelectedOrbit(state, payload) {
+    state.rightPanel.selectedOrbit = payload;
+  },
+  getSelectedLaunchTime(state, payload) {
+    state.rightPanel.selectedLaunchTime = payload;
   }
 }
 

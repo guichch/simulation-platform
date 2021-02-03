@@ -3,10 +3,10 @@
     <div class="title">
       <span>发射时间</span>
     </div>
-    <el-date-picker v-model="startTime" type="date" :picker-options="startPickOptions">
+    <el-date-picker v-model="launchTime[0]" type="date" :picker-options="startPickOptions" @change="startTime" placeholder="开始时间">
     </el-date-picker>
     <span class="zhi">至</span>
-    <el-date-picker v-model="endTime" type="date" :picker-options="endPickOptions">
+    <el-date-picker v-model="launchTime[1]" type="date" :picker-options="endPickOptions" @change="endTime" placeholder="结束时间">
     </el-date-picker>
   </div>
 </template>
@@ -15,12 +15,11 @@
 export default {
   data() {
     return {
-      startTime: '',
-      endTime: '',
+      launchTime: [],
       startPickOptions: {
         disabledDate: time => {
-          if (this.endTime) {
-            return time.getTime() >= this.endTime.getTime()
+          if (this.launchTime[1]) {
+            return time.getTime() >= this.launchTime[1].getTime()
           } else {
             return time.getTime() >= Date.now()
           }
@@ -28,8 +27,8 @@ export default {
       },
       endPickOptions: {
         disabledDate: time => {
-          if (this.startTime) {
-            return time.getTime() >= Date.now() || time.getTime() <= this.startTime.getTime()
+          if (this.launchTime[0]) {
+            return time.getTime() >= Date.now() || time.getTime() <= this.launchTime[0].getTime()
           } else {
             return time.getTime() >= Date.now()
           }
@@ -37,6 +36,18 @@ export default {
       }
     };
   },
+
+  // data 结束
+
+  // methods 开始
+  methods: {
+    startTime() {
+      this.$store.commit('getSelectedLaunchTime', this.launchTime)
+    },
+    endTime() {
+      this.$store.commit('getSelectedLaunchTime', this.launchTime)
+    },
+  }
 };
 </script>
 

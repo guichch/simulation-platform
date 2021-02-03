@@ -1,41 +1,111 @@
 <template>
   <div class="satellite-name">
     <span>卫星名称:</span>
-    <input type="text" placeholder="请输入卫星名称(e.g. ChinaSat 16)">
+    <el-autocomplete
+      class="inline-input"
+      v-model="selectedSatName"
+      :fetch-suggestions="querySearch"
+      placeholder="请输入卫星名称(e.g. ChinaSat 16)"   
+      @select="handleSelect"
+    ></el-autocomplete>
   </div>
 </template>
 
 <script>
-export default {
+import { getSatResource } from "@/network/satResource";
 
-}
+let timer = null;
+export default {
+  // data开始
+  data() {
+    return {
+      satList: [],
+      selectedSatName: "",
+    };
+  },
+  // data结束
+
+  // 钩子函数
+  mounted() {
+    if (sessionStorage.getItem("allSatCollection")) {
+      JSON.parse(sessionStorage.getItem("allSatCollection")).forEach((sat, index) => {
+        this.satList.push(sat);
+        this.satList[index].value = sat.satEName
+      });
+    } else {
+      getSatResource().then((res) => {
+        res.forEach((sat) => {
+          this.satList.push(sat);
+          this.satNameList[index].value = sat.satEName;
+        });
+        sessionStorage.setItem("allSatCollection", JSON.stringify(res));
+      });
+    }
+  },
+  // 钩子函数结束
+
+  // methods
+  methods: {
+    querySearch(queryString, cb) {
+      let result = queryString
+        ? this.satList.filter(this.createFilter(queryString))
+        : [];
+      cb(result);
+    },
+    createFilter(queryString) {
+      return (sat) => {
+        return sat.value.toLowerCase().indexOf(queryString.toLowerCase()) === 0;
+      };
+    },
+    handleSelect() {
+      window.clearTimeout(timer);
+      this.$store.commit('getSelectedSatName', this.selectedSatName)
+    },
+  },
+
+  // methods结束
+
+  // watch开始
+  watch: {
+    selectedSatName(newValue) {
+      if (!timer) {
+        timer = window.setTimeout(() => {
+        this.$store.commit('getSelectedSatName', newValue)
+        }, 3000)
+      } else {
+        clearTimeout(timer);
+        timer = window.setTimeout(() => {
+        this.$store.commit('getSelectedSatName', newValue)
+        }, 3000)
+      }
+    }
+  }
+};
 </script>
 
 <style scoped>
-  .satellite-name{
-    margin: 30px 0;
-  }
-  span{
-    color: #6A8BE6;
-    font: 18px PingFangSC-Regular, PingFang SC;
-    margin-right: 10px;
-  }
+.satellite-name {
+  margin: 30px 0;
+}
+span {
+  color: #6a8be6;
+  font: 18px PingFangSC-Regular, PingFang SC;
+  margin-right: 10px;
+}
 
-  input{
-    border: none;
-    outline: none;
-    background-color: transparent;
-    border-bottom: 1px solid #a1aeb3;
-    width: 280px;
-    padding: 0 15px;
-    color: #a1aeb3;
-  }
+.satellite-name /deep/ .el-input__inner {
+  background-color: transparent;
+  border: none;
+  width: 280px;
+  color: #a1aeb3;
+  border-bottom: 1px solid #a1aeb3;
+  font-size: 16px;
+  border-radius: 0;
+  height: 30px;
+}
 
-  input:focus{
-    border-bottom-color: #409eff;
-  }
+.satellite-name /deep/ .el-input__inner:focus {
+  border-bottom-color: #409eff;
+}
 
-  input::placeholder{
-    color: #a1aeb3;
-  }
 </style>

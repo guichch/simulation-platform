@@ -29,7 +29,13 @@ export default new Vuex.Store({
       isShowPanel: false,
       params: '',
     },
-    isShowAllSat: false
+    isShowAllSat: false,
+    rightPanel: {
+      selectedSatName: '',
+      selectedOperator: '',
+      selectedOrbit: '',
+      selectedLaunchTime: '',
+    }
   },
   getters: {
 

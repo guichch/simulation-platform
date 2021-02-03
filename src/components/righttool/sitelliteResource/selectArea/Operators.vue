@@ -9,7 +9,7 @@
           <input
             type="checkbox"
             name="operator"
-            value="ChinaSat"
+            value="ChinaSatcom"
             id="ChinaSat"
             v-model="checkedOperators"
           />
@@ -41,11 +41,11 @@
           <input
             type="checkbox"
             name="operator"
-            value="Intesat"
-            id="Intesat"
+            value="Intelsat"
+            id="Intelsat"
             v-model="checkedOperators"
           />
-          <label for="Intesat">Intesat</label>
+          <label for="Intelsat">Intelsat</label>
         </td>
         <td>
           <input
@@ -112,7 +112,7 @@ export default {
   data() {
     return {
       operators: [
-        "ChinaSat",
+        "ChinaSatcom",
         "APSTAR",
         "ASIASAT",
         "Intelsat",
@@ -125,6 +125,16 @@ export default {
       checkedOperators: [],
     };
   },
+
+  // watch开始
+  
+  watch: {
+    checkedOperators(newValue) {
+      this.$store.commit('getSelectedOperator', newValue);
+    }
+  }
+
+  // watch结束
 };
 </script>
 

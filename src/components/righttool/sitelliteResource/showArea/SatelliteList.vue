@@ -31,8 +31,12 @@
     </el-table>
     <div style="margin-top: 20px">
       <el-button type="primary" size="mini" @click="allSat">全部卫星</el-button>
-      <el-button type="primary" size="mini" @click="showNumber">统计数量</el-button>
-      <span style="margin-left: 10px; color: white" v-if="isShowNumber">{{currentSatList.length}}个卫星, {{getOrbit}}个轨位</span>
+      <el-button type="primary" size="mini" @click="showNumber"
+        >统计数量</el-button
+      >
+      <span style="margin-left: 10px; color: white" v-if="isShowNumber"
+        >{{ currentSatList.length }}个卫星, {{ orbit }}个轨位</span
+      >
     </div>
   </div>
 </template>
@@ -65,8 +69,14 @@ export default {
           label: "轨位",
         },
       ],
-      currentSatList: [],
-      isShowNumber: false
+      isShowNumber: false,
+      // currentSatList: [],
+      initSatList: [],
+      // selectedSatList: [],
+      selectedSatNameList: [],
+      selectedSatOperatorList: [],
+      selectedSatLaunchTimeList: [],
+      selectedSatOrbitList: [],
     };
   },
   // data结束
@@ -74,22 +84,44 @@ export default {
   // 钩子函数
   created() {
     if (sessionStorage.getItem("allSatCollection")) {
-      JSON.parse(sessionStorage.getItem("allSatCollection")).forEach(sat => {
-        if (sat.satEName === 'CHINASAT 6A' || sat.satEName === 'APSTAR 6' || sat.satEName === 'APSTAR 5'|| sat.satEName === 'Intelsat 709' || sat.satEName === 'Eutelsat 12WB' || sat.satEName === 'N-STAR C' || sat.satEName === 'ASTAR 1M' || sat.satEName === 'Telstar 14' || sat.satEName === 'Horizons 1' || sat.satEName === 'Korea 5') {
-          this.currentSatList.push(sat)
+      JSON.parse(sessionStorage.getItem("allSatCollection")).forEach((sat) => {
+        if (
+          sat.satEName === "CHINASAT 6A" ||
+          sat.satEName === "APSTAR 6" ||
+          sat.satEName === "APSTAR 5" ||
+          sat.satEName === "Intelsat 709" ||
+          sat.satEName === "Eutelsat 12WB" ||
+          sat.satEName === "N-STAR C" ||
+          sat.satEName === "ASTAR 1M" ||
+          sat.satEName === "Telstar 14" ||
+          sat.satEName === "Horizons 1" ||
+          sat.satEName === "Korea 5"
+        ) {
+          this.initSatList.push(sat);
         }
-      })
+      });
       this.satList = JSON.parse(sessionStorage.getItem("allSatCollection"));
     } else {
       getSatResource().then((res) => {
-        console.log(res)
-        res.forEach(sat => {
-          if (sat.satEName === 'CHINASAT 6A' || sat.satEName === 'APSTAR 6' || sat.satEName === 'APSTAR 5'|| sat.satEName === 'Intelsat 709' || sat.satEName === 'Eutelsat 12WB' || sat.satEName === 'N-STAR C' || sat.satEName === 'ASTAR 1M' || sat.satEName === 'Telstar 14' || sat.satEName === 'Horizons 1' || sat.satEName === 'Korea 5') {
-            this.currentSatList.push(sat)
+        console.log(res);
+        res.forEach((sat) => {
+          if (
+            sat.satEName === "CHINASAT 6A" ||
+            sat.satEName === "APSTAR 6" ||
+            sat.satEName === "APSTAR 5" ||
+            sat.satEName === "Intelsat 709" ||
+            sat.satEName === "Eutelsat 12WB" ||
+            sat.satEName === "N-STAR C" ||
+            sat.satEName === "ASTAR 1M" ||
+            sat.satEName === "Telstar 14" ||
+            sat.satEName === "Horizons 1" ||
+            sat.satEName === "Korea 5"
+          ) {
+            this.initSatList.push(sat);
           }
         });
         this.satList = res;
-        sessionStorage.setItem("allSatCollection",JSON.stringify(res))
+        sessionStorage.setItem("allSatCollection", JSON.stringify(res));
       });
     }
   },
@@ -102,28 +134,136 @@ export default {
       this.$store.commit("startPanel");
     },
     allSat() {
-      this.$store.commit('showAllSat')
+      this.$store.commit("showAllSat");
     },
     showNumber() {
       this.isShowNumber = true;
-    }
+    },
   },
 
   // methods结束
 
   // computed开始
   computed: {
-    getOrbit() {
+    orbit() {
       let orbit = [];
       let num = 0;
-      this.currentSatList.forEach(sat => {
+      this.currentSatList.forEach((sat) => {
         if (orbit.indexOf(sat.satPosition) === -1) {
           num = num + 1;
         }
-      })
-      return num
-    }
-  }
+      });
+      return num;
+    },
+
+    selectedSatList() {
+      let union = [];
+      if (this.selectedSatNameList.length) {
+        if (
+          (this.selectedSatOperatorList.includes(this.selectedSatNameList[0]) ||
+            this.selectedSatOperatorList.length == 0) &&
+          (this.selectedSatOperatorList.includes(this.selectedSatNameList[0]) ||
+            this.selectedSatOperatorList.length == 0) &&
+          (this.selectedSatOperatorList.includes(this.selectedSatNameList[0]) ||
+            this.selectedSatOperatorList.length == 0)
+        ) {
+          union = this.selectedSatNameList[0];
+        }
+      } else {
+        if (
+          this.selectedSatOperatorList.length == 0 &&
+          this.selectedSatLaunchTimeList == 0 &&
+          this.selectedSatOrbitList == 0
+        ) {
+          return union;
+        } else if (
+          (this.selectedSatLaunchTimeList == 0 &&
+            this.selectedSatOrbitList == 0) ||
+          (this.selectedSatOperatorList.length == 0 &&
+            this.selectedSatOrbitList == 0) ||
+          (this.selectedSatOperatorList.length == 0 &&
+            this.selectedSatLaunchTimeList == 0)
+        ) {
+          
+        }
+      }
+      /*       selectedSatNameList: [],
+      selectedSatOperatorList: [],
+      selectedSatLaunchTimeList: [],
+      selectedSatOrbitList: [], */
+    },
+
+    currentSatList() {
+      return this.selectedSatList.length
+        ? this.selectedSatList
+        : this.initSatList;
+    },
+
+    selectedSatName() {
+      // console.log(this.$store.state.rightPanel.selectedOperator)
+      return this.$store.state.rightPanel.selectedSatName;
+      // return this.$store.state.rightPanel
+    },
+    selectedOperator() {
+      return this.$store.state.rightPanel.selectedOperator;
+    },
+    selectedOrbit() {
+      return this.$store.state.rightPanel.selectedOrbit;
+    },
+    selectedLaunchTime() {
+      return this.$store.state.rightPanel.selectedLaunchTime;
+    },
+  },
+
+  // watch 开始
+  watch: {
+    selectedSatName(newValue) {
+      this.selectedSatNameList = [];
+      this.selectedSatNameList.push(
+        ...this.satList.filter((sat) => {
+          return sat.satEName === newValue;
+        })
+      );
+    },
+    selectedOperator(newValue) {
+      this.selectedSatOperatorList = [];
+      this.selectedSatOperatorList.push(
+        ...this.satList.filter((sat) => {
+          return newValue.includes(sat.satOperator);
+        })
+      );
+    },
+    selectedOrbit(newValue) {
+      this.selectedSatOrbitList = [];
+      if (newValue[0] && newValue[1]) {
+        const west = -Number(newValue[0]);
+        const east = Number(newValue[1]);
+        this.selectedSatOrbitList.push(
+          ...this.satList.filter((sat) => {
+            return sat.satPosition >= west && sat.satPosition <= east;
+          })
+        );
+      }
+    },
+    selectedLaunchTime(newValue) {
+      this.selectedSatLaunchTimeList = [];
+      if (newValue[0] && newValue[1]) {
+        const startTime = newValue[0].getTime();
+        const endTime = newValue[1].getTime();
+        this.selectedSatLaunchTimeList.push(
+          ...this.satList.filter((sat) => {
+            return (
+              new Date(sat.satLaunchTime).getTime() >= startTime &&
+              new Date(sat.satLaunchTime).getTime() <= endTime
+            );
+          })
+        );
+      }
+    },
+    deep: true,
+  },
+
+  // watch结束
 };
 </script>
 
@@ -173,7 +313,6 @@ export default {
 
 .satellite-list /deep/ tbody tr:hover > td {
   background-color: #90c0f1;
-
 }
 
 .satellite-list /deep/ tbody tr:hover .cell {
