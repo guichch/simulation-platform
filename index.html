@@ -1,33 +1,38 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Document</title>
   <style>
-    .father{
-      position: fixed;
-      background-color: #bfa;
-      height: 150px;
-      width: 200px;
-    }
-    .son{
-      position: absolute;
+    .father {
       width: 100px;
       height: 100px;
-      top: 100px;
-      background-color: red;
+    }
+
+    .box1 {
+      width: 20px;
+      height: 20px;
+      background-color: #bfa;
+      float: left;
     }
   </style>
 </head>
+
 <body>
   <div class="father">
-    <div class="son"></div>
+    <div>
+      <div class="box1"></div>
+      <span>1</span>
+    </div>
+    <div>
+      <div class="box1"></div>
+      <span>1</span>
+    </div>
+
   </div>
 
-  <script>
-    const r = /[CHINASAT 6A]/
-    console.log(r.test('C'))
-  </script>
 </body>
+
 </html>

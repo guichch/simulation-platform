@@ -191,7 +191,8 @@ export default {
       this.$store.commit("endPanel");
     },
     hidePanel() {
-      console.log(1);
+      this.$store.commit("endPanel");
+      this.$store.commit("startMiniPanel");
     },
   },
 };

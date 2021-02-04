@@ -94,7 +94,6 @@ export default {
           sat.satEName === "N-STAR C" ||
           sat.satEName === "ASTAR 1M" ||
           sat.satEName === "Telstar 14" ||
-          sat.satEName === "Horizons 1" ||
           sat.satEName === "Korea 5"
         ) {
           this.initSatList.push(sat);
@@ -114,7 +113,6 @@ export default {
             sat.satEName === "N-STAR C" ||
             sat.satEName === "ASTAR 1M" ||
             sat.satEName === "Telstar 14" ||
-            sat.satEName === "Horizons 1" ||
             sat.satEName === "Korea 5"
           ) {
             this.initSatList.push(sat);
@@ -132,6 +130,7 @@ export default {
     rowClick(row) {
       this.$store.commit("setParamsEasy", row);
       this.$store.commit("startPanel");
+      this.$store.commit("endMiniPanel");
     },
     allSat() {
       this.$store.commit("showAllSat");
@@ -162,35 +161,74 @@ export default {
         if (
           (this.selectedSatOperatorList.includes(this.selectedSatNameList[0]) ||
             this.selectedSatOperatorList.length == 0) &&
-          (this.selectedSatOperatorList.includes(this.selectedSatNameList[0]) ||
-            this.selectedSatOperatorList.length == 0) &&
-          (this.selectedSatOperatorList.includes(this.selectedSatNameList[0]) ||
-            this.selectedSatOperatorList.length == 0)
+          (this.selectedSatLaunchTimeList.includes(
+            this.selectedSatNameList[0]
+          ) ||
+            this.selectedSatLaunchTimeList.length == 0) &&
+          (this.selectedSatOrbitList.includes(this.selectedSatNameList[0]) ||
+            this.selectedSatOrbitList.length == 0)
         ) {
-          union = this.selectedSatNameList[0];
+          union.push(this.selectedSatNameList[0]);
         }
+        return union;
       } else {
         if (
           this.selectedSatOperatorList.length == 0 &&
-          this.selectedSatLaunchTimeList == 0 &&
-          this.selectedSatOrbitList == 0
+          this.selectedSatLaunchTimeList.length == 0 &&
+          this.selectedSatOrbitList.length == 0
         ) {
           return union;
         } else if (
-          (this.selectedSatLaunchTimeList == 0 &&
-            this.selectedSatOrbitList == 0) ||
+          (this.selectedSatLaunchTimeList.length == 0 &&
+            this.selectedSatOrbitList.length == 0) ||
           (this.selectedSatOperatorList.length == 0 &&
-            this.selectedSatOrbitList == 0) ||
+            this.selectedSatOrbitList.length == 0) ||
           (this.selectedSatOperatorList.length == 0 &&
-            this.selectedSatLaunchTimeList == 0)
+            this.selectedSatLaunchTimeList.length == 0)
         ) {
-          
+          this.selectedSatLaunchTimeList.forEach((sat) => {
+            union.push(sat);
+          });
+          this.selectedSatOperatorList.forEach((sat) => {
+            union.push(sat);
+          });
+          this.selectedSatOrbitList.forEach((sat) => {
+            union.push(sat);
+          });
+          return union;
+        } else if (this.selectedSatOperatorList.length == 0) {
+          this.selectedSatLaunchTimeList.forEach((sat) => {
+            if (this.selectedSatOrbitList.includes(sat)) {
+              union.push(sat);
+            }
+          });
+          return union;
+        } else if (this.selectedSatLaunchTimeList.length == 0) {
+          this.selectedSatOperatorList.forEach((sat) => {
+            if (this.selectedSatOrbitList.includes(sat)) {
+              union.push(sat);
+            }
+          });
+          return union;
+        } else if (this.selectedSatOrbitList.length == 0) {
+          this.selectedSatOperatorList.forEach((sat) => {
+            if (this.selectedSatLaunchTimeList.includes(sat)) {
+              union.push(sat);
+            }
+          });
+          return union;
+        } else {
+          this.selectedSatOperatorList.forEach((sat) => {
+            if (
+              this.selectedSatLaunchTimeList.includes(sat) &&
+              this.selectedSatOrbitList.includes(sat)
+            ) {
+              union.push(sat);
+            }
+          });
+          return union;
         }
       }
-      /*       selectedSatNameList: [],
-      selectedSatOperatorList: [],
-      selectedSatLaunchTimeList: [],
-      selectedSatOrbitList: [], */
     },
 
     currentSatList() {
@@ -232,6 +270,22 @@ export default {
           return newValue.includes(sat.satOperator);
         })
       );
+      if (newValue.includes("others")) {
+        this.selectedSatOperatorList.push(
+          ...this.satList.filter((sat) => {
+            return (
+              sat.satOperator !== "ChinaSatcom" &&
+              sat.satOperator !== "APSTAR" &&
+              sat.satOperator !== "ASIASAT" &&
+              sat.satOperator !== 'Intelsat' && 
+              sat.satOperator !== 'Eutelsat' && 
+              sat.satOperator !== 'Telesat' && 
+              sat.satOperator !== 'SES' && 
+              sat.satOperator !== 'JSAT'
+            );
+          })
+        );
+      }
     },
     selectedOrbit(newValue) {
       this.selectedSatOrbitList = [];

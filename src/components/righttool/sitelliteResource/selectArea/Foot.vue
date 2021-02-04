@@ -3,7 +3,7 @@
       <button type="reset">重置</button>
       <!-- <input type="reset" class="reset"> -->
       <!-- <input type="button" value="提交" class="submit"> -->
-      <button type="button">提交</button>
+      <!-- <button type="button">提交</button> -->
   </div>
 </template>
 

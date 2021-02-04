@@ -35,6 +35,11 @@ export default new Vuex.Store({
       selectedOperator: '',
       selectedOrbit: '',
       selectedLaunchTime: '',
+    },
+    leftPanel: {
+      isShowMini: false,
+      isShowLegend: false,
+      isShowLegendMini: true
     }
   },
   getters: {

@@ -28,7 +28,8 @@ export default {
     // 初始化卫星
     getSatCollection("2dmap");
     markersAll.forEach((marker) => {
-      marker.on("click", function () {    
+      marker.on("click", function () {
+        mySelf.$store.commit('endMiniPanel')    
         mySelf.$store.commit('startPanel');
         mySelf.$store.commit('setParams', this);
       });

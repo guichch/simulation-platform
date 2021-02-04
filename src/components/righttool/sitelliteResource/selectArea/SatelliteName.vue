@@ -7,6 +7,7 @@
       :fetch-suggestions="querySearch"
       placeholder="请输入卫星名称(e.g. ChinaSat 16)"   
       @select="handleSelect"
+      clearable
     ></el-autocomplete>
   </div>
 </template>
@@ -34,9 +35,9 @@ export default {
       });
     } else {
       getSatResource().then((res) => {
-        res.forEach((sat) => {
+        res.forEach((sat, index) => {
           this.satList.push(sat);
-          this.satNameList[index].value = sat.satEName;
+          this.satList[index].value = sat.satEName;
         });
         sessionStorage.setItem("allSatCollection", JSON.stringify(res));
       });
@@ -71,12 +72,12 @@ export default {
       if (!timer) {
         timer = window.setTimeout(() => {
         this.$store.commit('getSelectedSatName', newValue)
-        }, 3000)
+        }, 2000)
       } else {
         clearTimeout(timer);
         timer = window.setTimeout(() => {
         this.$store.commit('getSelectedSatName', newValue)
-        }, 3000)
+        }, 2000)
       }
     }
   }

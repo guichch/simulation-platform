@@ -11,6 +11,12 @@ const mutations = {
   endPanel(state) {
     state.satInfo.isShowPanel = false
   },
+  startMiniPanel(state) {
+    state.leftPanel.isShowMini = true
+  },
+  endMiniPanel(state) {
+    state.leftPanel.isShowMini = false
+  },
   setParams(state, payload) {
     state.satInfo.params = payload.options.attribute
   },
@@ -35,7 +41,22 @@ const mutations = {
   },
   getSelectedLaunchTime(state, payload) {
     state.rightPanel.selectedLaunchTime = payload;
-  }
+  },
+
+  // 左侧面板信息
+  startLegend(state) {
+    state.leftPanel.isShowLegend = true;
+  },
+  endLegend(state) {
+    state.leftPanel.isShowLegend = false;
+  },
+  startLegendMini(state) {
+    state.leftPanel.isShowLegendMini = true;
+  },
+  endLegendMini(state) {
+    state.leftPanel.isShowLegendMini = false;
+  },
+  
 }
 
 export default mutations

@@ -2,9 +2,10 @@
   <div class="home-menu">
     <Menu>
       <template #left>
-        <img src="@/assets/img/logo.png" alt="" class="logo" />
+        <img src="@/assets/img/logo.png" class="logo" />
         <h1>星地一体化仿真平台</h1>
-        <img src="@/assets/img/tip.png" alt="" class="tip" />
+        <img src="@/assets/img/tip.png" class="tip" @mouseover="tipOver" @mouseout="tipOut" />
+        <div class="to-do-list" v-if="isShow">1、专题数据板块；2、卫星详情里的卫星评估板块；3、卫星覆盖；4、卫星资源板块中其他指标；5、其他维视图</div>
       </template>
       <template #center>
         <div class="title">卫星资源能力分析</div>
@@ -38,9 +39,18 @@ export default {
   },
   data() {
     return {
-      isHover: true,
+      isShow: false,
     };
   },
+
+  methods: {
+    tipOver() {
+      this.isShow = true;
+    },
+    tipOut() {
+      this.isShow = false
+    }
+  }
 };
 </script>
 
@@ -74,5 +84,13 @@ h1 {
 .menu .el-menu li,
 .menu .el-menu li.el-submenu .el-submenu__title{
   height: 100%;
+}
+
+.to-do-list {
+  position: absolute;
+  z-index: 999;
+  color: #fff;
+  left: 10%;
+  top: 3%;
 }
 </style>

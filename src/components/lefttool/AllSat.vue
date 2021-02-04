@@ -92,10 +92,8 @@ export default {
   created() {
     if (sessionStorage.getItem("allSatCollection")) {
       this.satList = JSON.parse(sessionStorage.getItem("allSatCollection"));
-      console.log(this.satList)
     } else {
       getSatResource().then((res) => {
-        console.log(res)
         this.satList = res;
         sessionStorage.setItem("allSatCollection", JSON.stringify(res));
       });
