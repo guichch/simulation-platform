@@ -103,7 +103,7 @@ export default {
   // computed
   computed: {
     isShowAllSat() {
-      return this.$store.state.isShowAllSat
+      return this.$store.state.leftPanel.isShowAllSat
     }
   },
 

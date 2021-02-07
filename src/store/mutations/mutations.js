@@ -1,10 +1,5 @@
 const mutations = {
-  showSitelliteResource(state) {
-    state.isSelected = true
-  },
-  showThematicData(state) {
-    state.isSelected = false
-  },
+  // 卫星信息面板
   startPanel(state) {
     state.satInfo.isShowPanel = true
   },
@@ -23,13 +18,22 @@ const mutations = {
   setParamsEasy(state, payload) {
     state.satInfo.params = payload;
   },
+
+  // 所有卫星信息面板
   showAllSat(state) {
-    state.isShowAllSat = true
+    state.leftPanel.isShowAllSat = true
   },
   closeAllSat(state) {
-    state.isShowAllSat = false
+    state.leftPanel.isShowAllSat = false
   },
-  // 右侧面板卫星信息
+
+  // 右侧信息面板
+  showSitelliteResource(state) {
+    state.rightPanel.isSelected = true
+  },
+  showThematicData(state) {
+    state.rightPanel.isSelected = false
+  },
   getSelectedSatName(state, payload) {
     state.rightPanel.selectedSatName = payload;
   },
@@ -43,7 +47,7 @@ const mutations = {
     state.rightPanel.selectedLaunchTime = payload;
   },
 
-  // 左侧面板信息
+  // 左侧信息面板
   startLegend(state) {
     state.leftPanel.isShowLegend = true;
   },

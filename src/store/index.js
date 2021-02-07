@@ -15,8 +15,8 @@ const GEO_SERVER = 'http://' + SERVER2 + ':8020'
 
 export default new Vuex.Store({
   state: {
-    isSelected: true,
     
+    // 服务器接口
     POST_GIS_SERVER,
     USER_SERVER,
     REGISTER,
@@ -25,21 +25,28 @@ export default new Vuex.Store({
     API_SERVER_URL: API_SERVER + '/wt',
     GEO_SERVER,
     PROXY_SERVER,
+
+    // 卫星信息面板
     satInfo: {
       isShowPanel: false,
       params: '',
     },
-    isShowAllSat: false,
+    
+    // 右侧面板
     rightPanel: {
+      isSelected: true,
       selectedSatName: '',
       selectedOperator: '',
       selectedOrbit: '',
       selectedLaunchTime: '',
     },
+
+    // 左侧面板
     leftPanel: {
       isShowMini: false,
       isShowLegend: false,
-      isShowLegendMini: true
+      isShowLegendMini: true,
+      isShowAllSat: false,
     }
   },
   getters: {

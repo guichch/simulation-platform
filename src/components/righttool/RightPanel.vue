@@ -15,7 +15,7 @@ export default {
   },
   computed: {
     isSelected() {
-      return this.$store.state.isSelected
+      return this.$store.state.rightPanel.isSelected
     }
   }
 };
