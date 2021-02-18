@@ -43,6 +43,10 @@
 
 <script>
 import { getSatResource } from "@/network/satResource";
+import {
+  SatOrbit,
+  clearSatellite2DMap,
+} from "@/common/Map/ElevationLines/satOrbit";
 export default {
   // data开始
   data() {
@@ -277,11 +281,11 @@ export default {
               sat.satOperator !== "ChinaSatcom" &&
               sat.satOperator !== "APSTAR" &&
               sat.satOperator !== "ASIASAT" &&
-              sat.satOperator !== 'Intelsat' && 
-              sat.satOperator !== 'Eutelsat' && 
-              sat.satOperator !== 'Telesat' && 
-              sat.satOperator !== 'SES' && 
-              sat.satOperator !== 'JSAT'
+              sat.satOperator !== "Intelsat" &&
+              sat.satOperator !== "Eutelsat" &&
+              sat.satOperator !== "Telesat" &&
+              sat.satOperator !== "SES" &&
+              sat.satOperator !== "JSAT"
             );
           })
         );
@@ -312,6 +316,25 @@ export default {
             );
           })
         );
+      }
+    },
+    selectedSatList(newValue) {
+      if (this.$route.fullPath.indexOf("2dmap") !== -1) {
+        if (newValue.length > 0) {
+          clearSatellite2DMap();
+          SatOrbit(newValue, "2dmap", true);
+        } else {
+          clearSatellite2DMap();
+          SatOrbit(this.satList, "2dmap", true);
+        }
+      } else {
+        if (newValue.length > 0) {
+          // clearSatellite2DMap();
+          SatOrbit(newValue, "3dmap", true);
+        } else {
+          // clearSatellite2DMap();
+          SatOrbit(this.satList, "3dmap", true);
+        }
       }
     },
     deep: true,

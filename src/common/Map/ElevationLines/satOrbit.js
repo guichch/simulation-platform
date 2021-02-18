@@ -1,9 +1,12 @@
 import { getSatResource } from "@/network/satResource"
+import { viewer } from "../init3dMap"
+import { CzmlDataSource, ScreenSpaceEventHandler, ScreenSpaceEventType } from 'cesium'
+import { stationarySatellite } from "@/assets/data/stationarySatellite"
 import { Lmap } from "../init2dMap"
 import L from 'leaflet'
+import store from '@/store'
 export let searchedSatCollection, satMarkers, marker;
 export let markersAll = [];
-let objWXZY;
 //获取全部卫星
 export const getSatCollection = (map) => {
   if (sessionStorage.getItem("allSatCollection") == null) { //如果缓存中没有卫星数据的话
@@ -11,17 +14,17 @@ export const getSatCollection = (map) => {
       if (res.length > 0) {
         searchedSatCollection = res;
         sessionStorage.setItem("allSatCollection", JSON.stringify(searchedSatCollection)) //保存到缓存中
-        WeiXingGuiDao(searchedSatCollection, map, true) //添加卫星点以及轨道
+        SatOrbit(searchedSatCollection, map, true) //添加卫星点以及轨道
       }
     });
   } else { //如果缓存中有数据
-    WeiXingGuiDao(JSON.parse(sessionStorage.getItem("allSatCollection")), map, true) ////添加卫星点以及轨道
+    SatOrbit(JSON.parse(sessionStorage.getItem("allSatCollection")), map, true) ////添加卫星点以及轨道
   }
 }
 
 let searchedSatCollectionLength = 0;
 //添加卫星
-export const WeiXingGuiDao = (searchedSatCollection, map, handlerState) => {
+export const SatOrbit = (searchedSatCollection, map, handlerState) => {
   searchedSatCollectionLength = searchedSatCollection.length;
   if (map == "3dmap") {
     viewer.dataSources.removeAll(true);
@@ -37,7 +40,7 @@ export const WeiXingGuiDao = (searchedSatCollection, map, handlerState) => {
     var handler = new ScreenSpaceEventHandler(viewer.scene.canvas);
     handler.setInputAction(function (movement) { //鼠标移动到轨道上的卫星的时候，显示卫星基本详情
       var pick = viewer.scene.pick(movement.endPosition);
-      var satNameDiv = document.getElementById("sssss");
+      var satNameDiv = document.getElementById("satellite-name");
       if (pick != null) { //鼠标在卫星上
         if (pick.id._label) {
           if (pick.id._label._text._value != "CHINASAT_6A_37150") {
@@ -63,18 +66,14 @@ export const WeiXingGuiDao = (searchedSatCollection, map, handlerState) => {
         if (pick != null) { //鼠标点击卫星后
           if (pick.id._label) {
             if (pick.id._label._text._value != "CHINASAT_6A_37150") {
-              let row = null;
               searchedSatCollection.forEach(f => {
+                // console.log(pick.id._label._text._value)
                 if (f.satEName == pick.id._label._text._value) {
-                  row = f
+                  store.commit('endMiniPanel')
+                  store.commit('startPanel');
+                  store.commit('setParamsEasy', f);
                 }
               })
-              if (objWXZY) { //显示卫星详情框，以及仰角线加载等
-                objWXZY.$refs.satelliteResources_wxzy_xq.clickRow = row;
-                objWXZY.$refs.satelliteResources_wxzy_xq.satelliteResources_wxzy_xqShow = true;
-                objWXZY.$refs.EarthStation_xq.earthstation_xqShow = false;
-                objWXZY.$refs.satelliteResources_wxzy_xq.addEleLine();
-              }
             }
           }
         }
@@ -123,6 +122,25 @@ export const WeiXingGuiDao = (searchedSatCollection, map, handlerState) => {
     // satMarkers.addTo(Lmap);
     //添加赤道线
     addEquatorLine();
+    // 添加卫星移入以及点击事件
+    markersAll.forEach((marker) => {
+      marker.on("click", function () {
+        store.commit('endMiniPanel')
+        store.commit('startPanel');
+        store.commit('setParams', this);
+      });
+      marker.on("mouseover", function (e) {
+        var satNameDiv = document.getElementById("satellite-name");
+        satNameDiv.style.display = "block";
+        satNameDiv.style.left = e.containerPoint.x + 10 + "px";
+        satNameDiv.style.top = e.containerPoint.y + 100 + "px";
+        satNameDiv.innerHTML = "卫星名称:" + e.target.options.title;
+      });
+      marker.on("mouseout", function () {
+        var satNameDiv = document.getElementById("satellite-name");
+        satNameDiv.style.display = "none";
+      });
+    });
   }
 }
 

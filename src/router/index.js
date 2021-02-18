@@ -32,7 +32,7 @@ const routes = [
   {
     path: '/home',
     component: Home,
-    redirect: '/home/2dmap',
+    redirect: '/home/3dmap',
     children: [
       map3dRouter,
       map2dRouter
@@ -41,7 +41,7 @@ const routes = [
 ]
 
 const router = new VueRouter({
-  mode: 'history',
+  // mode: 'history',
   base: process.env.BASE_URL,
   routes
 })

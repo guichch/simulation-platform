@@ -60,6 +60,13 @@ const mutations = {
   endLegendMini(state) {
     state.leftPanel.isShowLegendMini = false;
   },
+
+  // 底部面板
+  setFootStatus(state, payload) {
+    state.footPanel.longitude = payload.longitude;
+    state.footPanel.latitude = payload.latitude;
+    state.footPanel.isShow = payload.isShow;
+  }
   
 }
 

@@ -84,7 +84,7 @@ export default {
 };
 </script>
 
-<style scoped>
+<style scoped lang='scss'>
 .satellite-name {
   margin: 30px 0;
 }

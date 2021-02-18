@@ -1,50 +1,30 @@
 <template>
   <div class="leaflet-wrapper">
     <div id="leaflet-containter" class="leaflet-containter"></div>
-    <div id="satellite-name"></div>
+    <!-- <div id="satellite-name"></div> -->
     <!-- <router-view></router-view> -->
   </div>
 </template>
 <script>
 import { initMap } from "@/common/Map/init2dMap";
-// import initMapEvent from "@/common/Map/init2dMapEvent";
+import initMapEvent from "@/common/Map/init2dMapEvent";
 import {
   getSatCollection,
-  markersAll,
-} from "@/common/Map/ElevationLines/satOrbital";
+} from "@/common/Map/ElevationLines/satOrbit";
 export default {
   name: "Map2D",
   components: {
     
   },
   mounted() {
-    let mySelf = this;
     // 初始化2d地图
     initMap();
 
     // 初始化2d地图事件
-    // initMapEvent(mySelf);
+    initMapEvent(this);
 
     // 初始化卫星
     getSatCollection("2dmap");
-    markersAll.forEach((marker) => {
-      marker.on("click", function () {
-        mySelf.$store.commit('endMiniPanel')    
-        mySelf.$store.commit('startPanel');
-        mySelf.$store.commit('setParams', this);
-      });
-      marker.on("mouseover", function (e) {
-        var satNameDiv = document.getElementById("satellite-name");
-        satNameDiv.style.display = "block";
-        satNameDiv.style.left = e.containerPoint.x + 10 + "px";
-        satNameDiv.style.top = e.containerPoint.y + 100 + "px";
-        satNameDiv.innerHTML = "卫星名称:" + e.target.options.title;
-      });
-      marker.on("mouseout", function () {
-        var satNameDiv = document.getElementById("satellite-name");
-        satNameDiv.style.display = "none";
-      });
-    });
   },
 };
 </script>

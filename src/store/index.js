@@ -47,6 +47,13 @@ export default new Vuex.Store({
       isShowLegend: false,
       isShowLegendMini: true,
       isShowAllSat: false,
+    },
+
+    // 底部面板
+    footPanel: {
+      latitude: 0.0000,
+      longitude: 0.0000,
+      isShow: false
     }
   },
   getters: {

@@ -21,6 +21,10 @@
 </template>
 
 <script>
+import {Lmap} from '@/common/Map/init2dMap'
+import screenfull from 'screenfull'
+import html2canvas from 'html2canvas'
+import Canvas2Image from '@/common/Public/canvas2image'
 export default {
   methods: {
     change(path) {
@@ -30,13 +34,22 @@ export default {
       )
     },
     chinaView() {
-      console.log('我是中国视角');
+      if (this.$route.fullPath.indexOf('2dmap') !== -1) {
+        Lmap.setView([35.3227, 103.5525], 5);
+      }
     },
     fullView() {
-      console.log('我是全屏视角');
+      screenfull.toggle();
     },
     toImg() {
-      console.log('我是打印按钮');
+      html2canvas(document.getElementById('app')).then(canvas => {
+        let imgWidth = 800;
+        let img = Canvas2Image.convertToImage(canvas, imgWidth, imgWidth * canvas.height / canvas.width, 'png')
+        let loadImg = document.createElement('a');
+        loadImg.href = img.src
+        loadImg.download = 'earth'
+        loadImg.click()
+      })
     }
   }
 }
