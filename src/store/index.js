@@ -39,6 +39,7 @@ export default new Vuex.Store({
       selectedOperator: '',
       selectedOrbit: '',
       selectedLaunchTime: '',
+      loading: false
     },
 
     // 左侧面板
@@ -47,6 +48,7 @@ export default new Vuex.Store({
       isShowLegend: false,
       isShowLegendMini: true,
       isShowAllSat: false,
+      
     },
 
     // 底部面板

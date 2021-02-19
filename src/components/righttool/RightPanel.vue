@@ -1,5 +1,9 @@
 <template>
-  <div class="right-panel">
+  <div
+    class="right-panel"
+    v-loading="loading"
+    element-loading-background="rgba(0, 0, 0, 0.8)"
+  >
     <sitellite-resource v-if="isSelected"></sitellite-resource>
     <thematic-data v-else></thematic-data>
   </div>
@@ -15,9 +19,12 @@ export default {
   },
   computed: {
     isSelected() {
-      return this.$store.state.rightPanel.isSelected
-    }
-  }
+      return this.$store.state.rightPanel.isSelected;
+    },
+    loading() {
+      return this.$store.state.rightPanel.loading;
+    },
+  },
 };
 </script>
 
@@ -33,5 +40,4 @@ export default {
   top: 75px;
   right: 0;
 }
-
 </style>

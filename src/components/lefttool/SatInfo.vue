@@ -27,6 +27,13 @@
         <div class="sat">
           <p class="satName">卫星名称：{{ satParams.satEName }}</p>
         </div>
+        <div class="satImg">
+          <img
+            v-if="imgData.length"
+            :src="'data:image/jpeg;base64,' + imgData[0].src"
+            height="180px"
+          />
+        </div>
         <div class="satDetails">
           <table>
             <tr>
@@ -49,17 +56,17 @@
           <div class="condition-selection">
             <div class="satCov">
               <span style="clear: both">卫星覆盖：</span>
-              <el-select v-model="value1" placeholder="请选择区域" clearable> 
-                <el-option label='全部' value='all'></el-option>
-                <el-option label='中国' value='China'></el-option>
-                <el-option label='美国' value='America'></el-option>
+              <el-select v-model="value1" placeholder="请选择区域" clearable>
+                <el-option label="全部" value="all"></el-option>
+                <el-option label="中国" value="China"></el-option>
+                <el-option label="美国" value="America"></el-option>
               </el-select>
               <el-select v-model="value2" placeholder="请选择频段" clearable>
-                <el-option label='全部' value='all'></el-option>
-                <el-option label='C' value='C'></el-option>
-                <el-option label='Ku' value='Ku'></el-option>
-                <el-option label='Ka' value='Ka'></el-option>
-                <el-option label='其他' value='others'></el-option>
+                <el-option label="全部" value="all"></el-option>
+                <el-option label="C" value="C"></el-option>
+                <el-option label="Ku" value="Ku"></el-option>
+                <el-option label="Ka" value="Ka"></el-option>
+                <el-option label="其他" value="others"></el-option>
               </el-select>
             </div>
             <div class="limit">
@@ -146,6 +153,7 @@
 </template>
 
 <script>
+import { getSatImg } from "@/network/satImg.js";
 export default {
   data() {
     return {
@@ -155,6 +163,7 @@ export default {
       isActive: true,
       value1: "",
       value2: "",
+      imgData: [],
     };
   },
   computed: {
@@ -195,17 +204,32 @@ export default {
       this.$store.commit("startMiniPanel");
     },
   },
+
+  watch: {
+    satParams(newValue) {
+      if (newValue) {
+        getSatImg(this.satParams.satEName).then((res) => {
+          this.imgData = [];
+          if (res.length > 0) {
+            res.forEach((data) => {
+              this.imgData.push({ src: data.satPic });
+            });
+          }
+        });
+      }
+    },
+  },
 };
 </script>
 
 <style scoped>
 .satellite-information {
   width: 520px;
-  /* height: 550px; */
+  height: 550px;
   background-color: rgba(6, 29, 57, 0.7);
   position: fixed;
   border: 1px solid #797979;
-  /* overflow: auto; */
+  overflow: auto;
   top: 9%;
   left: 0.5%;
   z-index: 999;
@@ -325,12 +349,12 @@ input::placeholder {
   margin-left: 20px;
 }
 
-.el-select{
+.el-select {
   width: 160px;
   margin-right: 15px;
 }
 
-.el-select /deep/ .el-input__inner{
+.el-select /deep/ .el-input__inner {
   width: 160px;
   background-color: transparent;
   border: none;
@@ -340,4 +364,8 @@ input::placeholder {
   border-radius: 0;
 }
 
+.satImg {
+  height: 200px;
+  text-align: center;
+}
 </style>

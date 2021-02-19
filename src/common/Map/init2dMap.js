@@ -1,6 +1,6 @@
 import L from 'leaflet'
 
-// import '@/common/lib/leaflet-echarts.js'
+// import './leaflet-echarts.js'
 
 let geoMapLayer = L.tileLayer(
   'http://map.geoq.cn/ArcGIS/rest/services/ChinaOnlineStreetPurplishBlue/MapServer/tile/{z}/{y}/{x}', {

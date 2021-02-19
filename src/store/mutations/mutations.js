@@ -46,6 +46,12 @@ const mutations = {
   getSelectedLaunchTime(state, payload) {
     state.rightPanel.selectedLaunchTime = payload;
   },
+  startLoading(state) {
+    state.rightPanel.loading = true;
+  },
+  endLoading(state) {
+    state.rightPanel.loading = false;
+  },
 
   // 左侧信息面板
   startLegend(state) {

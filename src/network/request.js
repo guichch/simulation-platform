@@ -3,7 +3,7 @@ import axios from 'axios'
 export function request(config) {
     const instance = axios.create({
         method: 'post',
-        timeout: 5000,
+        // timeout: 5000,
         
     });
 

@@ -5,7 +5,7 @@
         <img src="@/assets/img/logo.png" class="logo" />
         <h1>星地一体化仿真平台</h1>
         <img src="@/assets/img/tip.png" class="tip" @mouseover="tipOver" @mouseout="tipOut" />
-        <div class="to-do-list" v-if="isShow">1、专题数据板块；2、卫星详情里的卫星评估板块；3、卫星覆盖；4、卫星资源板块中其他指标；5、其他维视图</div>
+        <div class="to-do-list" v-if="isShow">1、专题数据板块；2、卫星详情里的卫星评估板块；3、卫星覆盖；4、卫星资源板块中其他指标；5、切换路由后，右侧面板重置；6、右侧面板重置后的效果；7、地球站列表的点击效果</div>
       </template>
       <template #center>
         <div class="title">卫星资源能力分析</div>

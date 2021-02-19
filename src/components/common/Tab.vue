@@ -21,6 +21,8 @@
 </template>
 
 <script>
+import { Cartesian3 } from "cesium";
+import { viewer } from "@/common/Map/init3dMap";
 import {Lmap} from '@/common/Map/init2dMap'
 import screenfull from 'screenfull'
 import html2canvas from 'html2canvas'
@@ -28,14 +30,19 @@ import Canvas2Image from '@/common/Public/canvas2image'
 export default {
   methods: {
     change(path) {
-      // console.log(this.$route);
-      this.$router.replace(
-        this.$route.fullPath + path
+      // console.log(this.$route.fullPath);
+      this.$router.push(
+        `/home${path}`
       )
     },
     chinaView() {
       if (this.$route.fullPath.indexOf('2dmap') !== -1) {
         Lmap.setView([35.3227, 103.5525], 5);
+      } else {
+          viewer.camera.flyTo({
+          destination: Cartesian3.fromDegrees(103.5525, 38.3227, 5000000.0),
+          duration: 1.5
+        });
       }
     },
     fullView() {

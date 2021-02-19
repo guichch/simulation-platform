@@ -1,6 +1,8 @@
 <template>
   <div class="map-container">
-    <router-view></router-view>
+    <keep-alive>
+      <router-view></router-view>
+    </keep-alive>
     <div id="satellite-name"></div>
   </div>
 </template>
