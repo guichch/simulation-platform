@@ -66,6 +66,15 @@ const mutations = {
   endLegendMini(state) {
     state.leftPanel.isShowLegendMini = false;
   },
+  startEarthPanel(state) {
+    state.leftPanel.isShowEarthPanel = true;
+  },
+  endEarthPanel(state) {
+    state.leftPanel.isShowEarthPanel = false;
+  },
+  setEarthInfo(state, payload) {
+    state.leftPanel.earthPanelParams = payload;
+  },
 
   // 底部面板
   setFootStatus(state, payload) {

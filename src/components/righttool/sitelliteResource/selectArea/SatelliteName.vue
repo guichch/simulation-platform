@@ -109,4 +109,8 @@ span {
   border-bottom-color: #409eff;
 }
 
+.satellite-name /deep/ .el-input__inner::placeholder {
+  font-size: 14px;
+}
+
 </style>

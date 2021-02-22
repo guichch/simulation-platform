@@ -48,7 +48,8 @@ export default new Vuex.Store({
       isShowLegend: false,
       isShowLegendMini: true,
       isShowAllSat: false,
-      
+      isShowEarthPanel: false,
+      earthPanelParams: ''
     },
 
     // 底部面板

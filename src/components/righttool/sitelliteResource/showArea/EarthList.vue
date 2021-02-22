@@ -65,7 +65,7 @@ export default {
 
   // watch 开始
   watch: {
-    selectedOperatorList(newValue) {      
+    selectedOperatorList(newValue) {     
       const map =
         this.$route.fullPath.indexOf("2dmap") == -1 ? "3dmap" : "2dmap";
       if (newValue.length) {
@@ -89,10 +89,15 @@ export default {
 
   // method 开始
   methods: {
-    rowClick() {},
+    rowClick(earthInfo) {
+      this.$store.commit('startEarthPanel');
+      this.$store.commit('endPanel');
+      this.$store.commit('setEarthInfo', earthInfo);
+    },
   },
 
   // method 结束
+
 };
 </script>
 

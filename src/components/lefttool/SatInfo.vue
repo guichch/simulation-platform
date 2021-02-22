@@ -229,7 +229,7 @@ export default {
   background-color: rgba(6, 29, 57, 0.7);
   position: fixed;
   border: 1px solid #797979;
-  overflow: auto;
+  /* overflow: auto; */
   top: 9%;
   left: 0.5%;
   z-index: 999;
@@ -256,6 +256,8 @@ export default {
 .content {
   background-color: #002236;
   color: #d7d7d7;
+  height: 514px;
+  overflow: auto;
 }
 
 .content .tab-control {

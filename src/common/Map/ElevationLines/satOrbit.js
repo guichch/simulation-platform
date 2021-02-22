@@ -67,11 +67,11 @@ export const SatOrbit = (searchedSatCollection, map, handlerState) => {
           if (pick.id._label) {
             if (pick.id._label._text._value != "CHINASAT_6A_37150") {
               searchedSatCollection.forEach(f => {
-                // console.log(pick.id._label._text._value)
                 if (f.satEName == pick.id._label._text._value) {
                   store.commit('endMiniPanel')
                   store.commit('startPanel');
                   store.commit('setParamsEasy', f);
+                  store.commit('endEarthPanel')
                 }
               })
             }
@@ -128,6 +128,7 @@ export const SatOrbit = (searchedSatCollection, map, handlerState) => {
         store.commit('endMiniPanel')
         store.commit('startPanel');
         store.commit('setParams', this);
+        store.commit('endEarthPanel')
       });
       marker.on("mouseover", function (e) {
         var satNameDiv = document.getElementById("satellite-name");

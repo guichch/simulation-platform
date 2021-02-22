@@ -43,10 +43,15 @@
 
 <script>
 import { getSatResource } from "@/network/satResource";
+import { getSatCoverage } from "@/network/satCoverage";
+
 import {
   SatOrbit,
   clearSatellite2DMap,
 } from "@/common/Map/ElevationLines/satOrbit";
+import {
+  showCoverage
+} from "@/common/Map/ElevationLines/satCoverage";
 export default {
   // data开始
   data() {
@@ -81,6 +86,7 @@ export default {
       selectedSatOperatorList: [],
       selectedSatLaunchTimeList: [],
       selectedSatOrbitList: [],
+      map: '',
     };
   },
   // data结束
@@ -134,7 +140,14 @@ export default {
     rowClick(row) {
       this.$store.commit("setParamsEasy", row);
       this.$store.commit("startPanel");
+      this.$store.commit("endEarthPanel");
       this.$store.commit("endMiniPanel");
+      if (this.$route.fullPath.indexOf('2dmap') !== -1) {
+        this.map = '2dmap'
+      } else {
+        this.map = '3dmap'
+      }
+      showCoverage(row, this.map, this);
     },
     allSat() {
       this.$store.commit("showAllSat");
@@ -142,6 +155,7 @@ export default {
     showNumber() {
       this.isShowNumber = true;
     },
+
   },
 
   // methods结束
