@@ -14,6 +14,7 @@ export const getSatCollection = (map) => {
       if (res.length > 0) {
         searchedSatCollection = res;
         sessionStorage.setItem("allSatCollection", JSON.stringify(searchedSatCollection)) //保存到缓存中
+        localStorage.setItem("allSatCollection", JSON.stringify(searchedSatCollection)) //保存到缓存中
         SatOrbit(searchedSatCollection, map, true) //添加卫星点以及轨道
       }
     });

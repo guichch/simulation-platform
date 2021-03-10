@@ -72,6 +72,7 @@ export default {
         this.$store.commit('startLoading')
         getEarthList(newValue).then((res) => {
           console.log(res);
+          localStorage.setItem(newValue.toString(), JSON.stringify(res))
           this.currentEarthList = res;
           addPointEarthStation(this.currentEarthList, map, this);
           this.$store.commit('endLoading')

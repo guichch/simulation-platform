@@ -168,6 +168,10 @@ export const showCoverage = (row, map, Vue) => {
             row.satEName,
             JSON.stringify(res)
           );
+          localStorage.setItem(
+            row.satEName,
+            JSON.stringify(res)
+          );
           if (map == '2dmap') {
             deleteSurfaceBeam2DMap();
             res.forEach((data) => {

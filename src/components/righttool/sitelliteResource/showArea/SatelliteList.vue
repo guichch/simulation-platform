@@ -130,6 +130,7 @@ export default {
         });
         this.satList = res;
         sessionStorage.setItem("allSatCollection", JSON.stringify(res));
+        localStorage.setItem("allSatCollection", JSON.stringify(res));
       });
     }
   },
