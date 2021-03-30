@@ -14,12 +14,11 @@ export const getSatCollection = (map) => {
       if (res.length > 0) {
         searchedSatCollection = res;
         sessionStorage.setItem("allSatCollection", JSON.stringify(searchedSatCollection)) //保存到缓存中
-        localStorage.setItem("allSatCollection", JSON.stringify(searchedSatCollection)) //保存到缓存中
         SatOrbit(searchedSatCollection, map, true) //添加卫星点以及轨道
       }
     });
   } else { //如果缓存中有数据
-    SatOrbit(JSON.parse(sessionStorage.getItem("allSatCollection")), map, true) ////添加卫星点以及轨道
+    SatOrbit(JSON.parse(sessionStorage.getItem("allSatCollection")), map, true) //添加卫星点以及轨道
   }
 }
 

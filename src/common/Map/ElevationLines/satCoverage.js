@@ -137,63 +137,41 @@ export const deleteSurfaceBeam = () => {
 //删除2维波束面
 export const deleteSurfaceBeam2DMap = () => {
   if (allSurfaceBeamViewer2DMap.length) {
-      allSurfaceBeamViewer2DMap.forEach(data => {
-          data.remove()
-      });
-      allSurfaceBeamViewer2DMap = []
+    allSurfaceBeamViewer2DMap.forEach(data => {
+      data.remove()
+    });
+    allSurfaceBeamViewer2DMap = []
   }
 }
 
 // 显示卫星覆盖
 export const showCoverage = (row, map, Vue) => {
-  if (sessionStorage.getItem(row.satEName) !== null) {
-    const res = JSON.parse(sessionStorage.getItem(row.satEName));
-    if (map == '2dmap') {
-      deleteSurfaceBeam2DMap();
-      res.forEach((data) => {
-        addSurfaceBeam2DMap(data); //添加2D包络面
-      });
-    } else {
-      deleteSurfaceBeam();
-      res.forEach((data) => {
-        addSurfaceBeam(data); //添加3D包络面
-      });
-    }
-  } else {
-    getSatCoverage(row.satEName)
-      .then((res) => {
-        // res => 覆盖波束数据
-        if (res.length) {
-          sessionStorage.setItem(
-            row.satEName,
-            JSON.stringify(res)
-          );
-          localStorage.setItem(
-            row.satEName,
-            JSON.stringify(res)
-          );
-          if (map == '2dmap') {
-            deleteSurfaceBeam2DMap();
-            res.forEach((data) => {
-              addSurfaceBeam2DMap(data); //添加2D包络面
-            });
-          } else {
-            deleteSurfaceBeam();
-            res.forEach((data) => {
-              addSurfaceBeam(data); //添加3D包络面
-            });
-          }
+  getSatCoverage(row.satEName)
+    .then((res) => {
+      // res => 覆盖波束数据
+      console.log(res)
+      if (res.length) {
+        if (map == '2dmap') {
+          deleteSurfaceBeam2DMap();
+          res.forEach((data) => {
+            addSurfaceBeam2DMap(data); //添加2D包络面
+          });
         } else {
-          Vue.$message.error("暂无卫星覆盖数据");
-          if (map == '2dmap') {
-            deleteSurfaceBeam2DMap();
-          } else {
-            deleteSurfaceBeam();
-          }
+          deleteSurfaceBeam();
+          res.forEach((data) => {
+            addSurfaceBeam(data); //添加3D包络面
+          });
         }
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  }
+      } else {
+        Vue.$message.error("暂无卫星覆盖数据");
+        if (map == '2dmap') {
+          deleteSurfaceBeam2DMap();
+        } else {
+          deleteSurfaceBeam();
+        }
+      }
+    })
+    .catch((err) => {
+      console.log(err);
+    });
 }

@@ -65,24 +65,27 @@ export default {
 
   // watch 开始
   watch: {
-    selectedOperatorList(newValue) {     
+    selectedOperatorList(newValue) {
       const map =
         this.$route.fullPath.indexOf("2dmap") == -1 ? "3dmap" : "2dmap";
       if (newValue.length) {
-        this.$store.commit('startLoading')
-        getEarthList(newValue).then((res) => {
-          console.log(res);
-          localStorage.setItem(newValue.toString(), JSON.stringify(res))
-          this.currentEarthList = res;
+        if (localStorage.getItem(newValue.toString()) !== null) {
+          this.currentEarthList = JSON.parse(
+            localStorage.getItem(newValue.toString())
+          );
           addPointEarthStation(this.currentEarthList, map, this);
-          this.$store.commit('endLoading')
-        });
+        } else {
+          getEarthList(newValue).then((res) => {
+            this.$store.commit("startLoading");
+            this.currentEarthList = res;
+            addPointEarthStation(this.currentEarthList, map, this);
+            this.$store.commit("endLoading");
+          });
+        }
       } else {
         this.currentEarthList = [];
         addPointEarthStation(this.currentEarthList, map, this);
       }
-
-      
     },
   },
 
@@ -91,14 +94,13 @@ export default {
   // method 开始
   methods: {
     rowClick(earthInfo) {
-      this.$store.commit('startEarthPanel');
-      this.$store.commit('endPanel');
-      this.$store.commit('setEarthInfo', earthInfo);
+      this.$store.commit("startEarthPanel");
+      this.$store.commit("endPanel");
+      this.$store.commit("setEarthInfo", earthInfo);
     },
   },
 
   // method 结束
-
 };
 </script>
 

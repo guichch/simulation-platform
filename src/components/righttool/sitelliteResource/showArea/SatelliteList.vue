@@ -43,7 +43,6 @@
 
 <script>
 import { getSatResource } from "@/network/satResource";
-import { getSatCoverage } from "@/network/satCoverage";
 
 import {
   SatOrbit,
@@ -93,8 +92,8 @@ export default {
 
   // 钩子函数
   created() {
-    if (sessionStorage.getItem("allSatCollection")) {
-      JSON.parse(sessionStorage.getItem("allSatCollection")).forEach((sat) => {
+    if (localStorage.getItem("allSatCollection")) {
+      JSON.parse(localStorage.getItem("allSatCollection")).forEach((sat) => {
         if (
           sat.satEName === "CHINASAT 6A" ||
           sat.satEName === "APSTAR 6" ||
@@ -130,7 +129,6 @@ export default {
         });
         this.satList = res;
         sessionStorage.setItem("allSatCollection", JSON.stringify(res));
-        localStorage.setItem("allSatCollection", JSON.stringify(res));
       });
     }
   },

@@ -40,7 +40,6 @@ export default {
           this.satList[index].value = sat.satEName;
         });
         sessionStorage.setItem("allSatCollection", JSON.stringify(res));
-        localStorage.setItem("allSatCollection", JSON.stringify(res));
       });
     }
   },
