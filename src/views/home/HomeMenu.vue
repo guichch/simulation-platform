@@ -9,7 +9,6 @@
       </template>
       <template #center>
         <div class="title">卫星资源能力分析</div>
-        <!-- <span class="title">卫星资源能力分析</span> -->
       </template>
       <template #right>
         <el-menu
@@ -57,14 +56,15 @@ export default {
 <style scoped lang='scss'>
 .logo {
   width: 50px;
-  margin: 0px 20px;
+  margin: -25px 20px 0;
   vertical-align: middle;
 }
 h1 {
-  font-size: 1.2vw;
+  font-size: 40px;
   color: white;
-  display: inline-block;
+  display: inline;
   margin: 0;
+  line-height: 75px;
 }
 
 .tip {
@@ -73,17 +73,20 @@ h1 {
 }
 
 .title {
-  font-size: 1.3vw;
+  font-size: 40px;
   color: white;
   text-align: center;
 }
 
-.menu .el-row,
-.menu .el-col,
-.menu .el-menu,
-.menu .el-menu li,
-.menu .el-menu li.el-submenu .el-submenu__title{
-  height: 100%;
+.el-menu {
+  border: none;
+}
+
+.el-menu,
+.el-menu li,
+.el-menu /deep/ .el-submenu__title{
+  height: 100%; 
+  line-height: 75px;
 }
 
 .to-do-list {

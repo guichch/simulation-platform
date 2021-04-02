@@ -18,7 +18,7 @@ export const initMap = () => {
     zoom: 3,
     layers: geoMapLayer,
     zoomControl: false,
-    measureControl: true,
+    measureControl: false,
     layersControl: true,
     preferCanvas: true,
     worldCopyJump: true,

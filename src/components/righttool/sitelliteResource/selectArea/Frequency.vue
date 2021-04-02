@@ -3,56 +3,9 @@
     <div class="title">
       <span>通信频段</span>
     </div>
-    <table class="operator-container">
-      <tr>
-        <td>
-          <input type="checkbox" id="C" value="C" v-model="selectedFrequency" />
-          <label for="C">C</label>
-        </td>
-        <td>
-          <input
-            type="checkbox"
-            id="Ku"
-            value="Ku"
-            v-model="selectedFrequency"
-          />
-          <label for="Ku">Ku</label>
-        </td>
-        <td>
-          <input
-            type="checkbox"
-            id="Ka"
-            value="Ka"
-            v-model="selectedFrequency"
-          />
-          <label for="Ka">Ka</label>
-        </td>
-        <td>
-          <input
-            type="checkbox"
-            id="other"
-            value="other"
-            v-model="selectedFrequency"
-          />
-          <label for="other">其他</label>
-        </td>
-      </tr>
-    </table>
-    <!-- <div class="frequency-container">
-      <input type="checkbox" id="C" value="C" v-model="selectedFrequency" />
-      <label for="C">C</label>
-      <input type="checkbox" id="Ku" value="Ku" v-model="selectedFrequency" />
-      <label for="Ku">Ku</label>
-      <input type="checkbox" id="Ka" value="Ka" v-model="selectedFrequency" />
-      <label for="Ka">Ka</label>
-      <input
-        type="checkbox"
-        id="other"
-        value="other"
-        v-model="selectedFrequency"
-      />
-      <label for="other">其他</label>
-    </div> -->
+    <el-checkbox-group v-model="selectedFrequency">
+      <el-checkbox v-for="(item, index) in frequencyList" :label="item" :key="index"></el-checkbox>
+    </el-checkbox-group>
   </div>
 </template>
 
@@ -60,16 +13,16 @@
 export default {
   data() {
     return {
-      // frequencyList: ["C", "Ku", "Ka", "others"],
+      frequencyList: ["C", "Ku", "Ka", "others"],
       selectedFrequency: [],
     };
   },
 };
 </script>
 
-<style scoped>
+<style scoped lang='scss'>
 .frequency {
-  margin-bottom: 30px;
+  margin-bottom: 20px;
 }
 .title {
   font-size: 13pt;
@@ -81,17 +34,13 @@ export default {
   padding-left: 10px;
 }
 
-table{
-  width: 60%;
-  color: #a1aeb3;
+.el-checkbox-group {
   padding-left: 10px;
+  margin: 4px 0;
 }
 
-table tr{
-  width: 100%;
-}
-
-table td{
-  width: 25%;
+.el-checkbox /deep/ .el-checkbox__label {
+  color: #a1aeb3;
+  font-size: 16px;
 }
 </style>

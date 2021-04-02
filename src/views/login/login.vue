@@ -45,6 +45,7 @@
 
 <script>
 import {request} from '@/network/request'
+import('@/assets/css/login.css')
 export default {
   data() {
     return {
@@ -78,5 +79,5 @@ export default {
 </script>
 
 <style lang='scss'>
-  @import url("~assets/css/login.css");
+  
 </style>

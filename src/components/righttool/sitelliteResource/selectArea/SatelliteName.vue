@@ -5,7 +5,7 @@
       class="inline-input"
       v-model="selectedSatName"
       :fetch-suggestions="querySearch"
-      placeholder="请输入卫星名称(e.g. ChinaSat 16)"   
+      placeholder="请输入卫星名称(e.g. ChinaSat 16)"
       @select="handleSelect"
       clearable
     ></el-autocomplete>
@@ -13,7 +13,7 @@
 </template>
 
 <script>
-import { getSatResource } from "@/network/satResource";
+import satResource from "@/data/satResource.json";
 
 let timer = null;
 export default {
@@ -28,20 +28,10 @@ export default {
 
   // 钩子函数
   mounted() {
-    if (sessionStorage.getItem("allSatCollection")) {
-      JSON.parse(sessionStorage.getItem("allSatCollection")).forEach((sat, index) => {
-        this.satList.push(sat);
-        this.satList[index].value = sat.satEName
-      });
-    } else {
-      getSatResource().then((res) => {
-        res.forEach((sat, index) => {
-          this.satList.push(sat);
-          this.satList[index].value = sat.satEName;
-        });
-        sessionStorage.setItem("allSatCollection", JSON.stringify(res));
-      });
-    }
+    satResource.forEach((sat, index) => {
+      this.satList.push({});
+      this.satList[index].value = sat.satEName;
+    });
   },
   // 钩子函数结束
 
@@ -60,7 +50,7 @@ export default {
     },
     handleSelect() {
       window.clearTimeout(timer);
-      this.$store.commit('getSelectedSatName', this.selectedSatName)
+      this.$store.commit("getSelectedSatName", this.selectedSatName);
     },
   },
 
@@ -71,16 +61,16 @@ export default {
     selectedSatName(newValue) {
       if (!timer) {
         timer = window.setTimeout(() => {
-        this.$store.commit('getSelectedSatName', newValue)
-        }, 2000)
+          this.$store.commit("getSelectedSatName", newValue);
+        }, 2000);
       } else {
         clearTimeout(timer);
         timer = window.setTimeout(() => {
-        this.$store.commit('getSelectedSatName', newValue)
-        }, 2000)
+          this.$store.commit("getSelectedSatName", newValue);
+        }, 2000);
       }
-    }
-  }
+    },
+  },
 };
 </script>
 
@@ -112,5 +102,4 @@ span {
 .satellite-name /deep/ .el-input__inner::placeholder {
   font-size: 14px;
 }
-
 </style>

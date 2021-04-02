@@ -1,17 +1,14 @@
 const path = require('path');
-const resolve = dir => path.join(__dirname, dir);
 
 module.exports = {
-    chainWebpack: config => {
-        config.resolve.alias
-            .set('@', resolve('./src'))
-            .set('assets', resolve('./src/assets'))
-            .set('common', resolve('src/common'))
-            .set('components', resolve('src/components'))
-            .set('views', resolve('src/views'))
-            .set('network', resolve('src/network'))
-
-    },
+/*     resolve: {
+      alias: {
+        "newtwork": path.resolve(__dirname, "src/network"),
+        "components": path.resolve(__dirname, "src/components"),
+        "assets": path.resolve(__dirname, "src/assets"),
+        "common": path.resolve(__dirname, "src/common")
+      }
+    }, */
     devServer: {
         proxy: {
             '/apis': {

@@ -1,4 +1,4 @@
-import Map2d from '@/components/map/Map2d.vue'
+const Map2d = () => import('@/components/map/Map2d.vue')
 
 export default {
   path: '2dmap',

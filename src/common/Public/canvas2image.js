@@ -3,7 +3,7 @@
  * and save the image file
  */
 
-var Canvas2Image = function() {
+const Canvas2Image = function() {
 
     // check if support sth.
     var $support = function() {
@@ -12,7 +12,7 @@ var Canvas2Image = function() {
 
         return {
             canvas: !!ctx,
-            imageData: !!ctx.getImageData,
+            imageData: !!ctx.getImageData, // 获取画布像素的拷贝
             dataURL: !!canvas.toDataURL,
             btoa: !!window.btoa
         };
@@ -47,7 +47,7 @@ var Canvas2Image = function() {
         document.location.href = strData;
     }
 
-    function genImage(strData) {
+    function getImage(strData) {
         var img = document.createElement('img');
         img.src = strData;
         return img;
@@ -230,7 +230,7 @@ var Canvas2Image = function() {
                 return genImage(makeURI(strData, 'image/bmp'));
             } else {
                 strData = getDataURL(canvas, type, width, height);
-                return genImage(strData);
+                return getImage(strData);
             }
         }
     };

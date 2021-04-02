@@ -3,7 +3,13 @@ import { Color, Cartesian3, Entity, LabelStyle, NearFarScalar } from "cesium"
 import { Lmap } from "../init2dMap";
 import * as L from 'leaflet';
 
-import { getSatCoverage } from '@/network/satCoverage'
+// import { getSatCoverage } from '@/network/satCoverage'
+import satResource from '@/data/satResource.json'
+import satCoverage from '@/data/satCoverage.json'
+satCoverage.forEach((element, index, arr) => {
+  arr[index] = element.data
+})
+
 
 var near_entity
 export let allSurfaceBeamViewer3DMap = [];  // 3维波束覆盖数据
@@ -23,7 +29,7 @@ export const addSurfaceBeam = (data) => {
       _Color = data.color;
     }
     if (_Color === null) {
-      JSON.parse(sessionStorage.getItem("allSatCollection")).forEach(d => { //获取波束面对应的颜色
+      satResource.forEach(d => { //获取波束面对应的颜色
         if (data.satname == d.satEName) {
           _Color = "rgb(" + d.operatorColorDark + ")"
         }
@@ -54,9 +60,10 @@ export const addSurfaceBeam2DMap = (data) => {
     _Color = data.color; //获取波束面对应的颜色
   }
   if (_Color == null) {
-    JSON.parse(sessionStorage.getItem("allSatCollection")).forEach(d => {
+    satResource.forEach(d => {
       if (data.satname == d.satEName) {
         _Color = "rgb(" + d.operatorColorDark + ")"
+        console.log(_Color)
       }
     }) //获取卫星对应的波束面的颜色
   }
@@ -146,32 +153,55 @@ export const deleteSurfaceBeam2DMap = () => {
 
 // 显示卫星覆盖
 export const showCoverage = (row, map, Vue) => {
-  getSatCoverage(row.satEName)
-    .then((res) => {
-      // res => 覆盖波束数据
-      console.log(res)
-      if (res.length) {
-        if (map == '2dmap') {
-          deleteSurfaceBeam2DMap();
-          res.forEach((data) => {
-            addSurfaceBeam2DMap(data); //添加2D包络面
-          });
-        } else {
-          deleteSurfaceBeam();
-          res.forEach((data) => {
-            addSurfaceBeam(data); //添加3D包络面
-          });
-        }
-      } else {
-        Vue.$message.error("暂无卫星覆盖数据");
-        if (map == '2dmap') {
-          deleteSurfaceBeam2DMap();
-        } else {
-          deleteSurfaceBeam();
-        }
+  if (map == '2dmap') {
+    deleteSurfaceBeam2DMap();
+    for (let item of satCoverage) {
+      if (item[0].satname === row.satEName) {
+        item.forEach(data => {
+          addSurfaceBeam2DMap(data);
+
+        })
+        return
       }
-    })
-    .catch((err) => {
-      console.log(err);
-    });
+    }
+    Vue.$message.error("暂无卫星覆盖数据");
+  } else {
+    deleteSurfaceBeam();
+    for (let item of satCoverage) {
+      if (item[0].satname === row.satEName) {
+        item.forEach(data => {
+          addSurfaceBeam(data);
+
+        })
+        return
+      }
+    }
+    Vue.$message.error("暂无卫星覆盖数据");
+  }
+  /*   getSatCoverage(row.satEName)
+      .then(res => {
+        if (res.length) {
+          if (map == '2dmap') {
+            deleteSurfaceBeam2DMap();
+            res.forEach((data) => {
+              addSurfaceBeam2DMap(data); //添加2D包络面
+            });
+          } else {
+            deleteSurfaceBeam();
+            res.forEach((data) => {
+              addSurfaceBeam(data); //添加3D包络面
+            });
+          }
+        } else {
+          Vue.$message.error("暂无卫星覆盖数据");
+          if (map == '2dmap') {
+            deleteSurfaceBeam2DMap();
+          } else {
+            deleteSurfaceBeam();
+          }
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      }); */
 }

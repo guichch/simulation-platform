@@ -27,7 +27,7 @@ export default {
 
 <style scoped>
 .coverage{
-  margin-bottom: 30px;
+  margin-bottom: 20px;
 }
 .title {
   font-size: 13pt;

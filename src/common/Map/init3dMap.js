@@ -1,11 +1,10 @@
-// 这实现里也是为了减少框架的体积，选择使用按需引入，所有地图的操作全部在这里
 import {
     Viewer,
     UrlTemplateImageryProvider,
     Cartesian3,
     Color
 } from 'cesium'
-import { getSatCollection } from "./ElevationLines/satOrbit"
+
 const options = {
     contextOptions: {
         webgl: {
@@ -55,6 +54,6 @@ export const initMap = () => {
 
     // 去掉版权信息
     viewer._cesiumWidget._creditContainer.style.display = "none";
-    getSatCollection('3dmap')
+  
     return viewer
 }

@@ -4,8 +4,9 @@
     v-loading="loading"
     element-loading-background="rgba(0, 0, 0, 0.8)"
   >
-    <sitellite-resource v-if="isSelected"></sitellite-resource>
-    <thematic-data v-else></thematic-data>
+    <keep-alive>
+      <component :is="selectedComponent"></component>
+    </keep-alive>
   </div>
 </template>
 
@@ -24,15 +25,17 @@ export default {
     loading() {
       return this.$store.state.rightPanel.loading;
     },
-  },
+    selectedComponent() {
+      return this.isSelected ? 'SitelliteResource' : 'ThematicData'
+    }
+  }
 };
 </script>
 
-<style scoped>
+<style scoped lang='scss'>
 .right-panel {
   width: 450px;
   height: calc(100vh - 75px);
-  /* float: right; */
   background-color: #043551;
   overflow: auto;
   position: absolute;

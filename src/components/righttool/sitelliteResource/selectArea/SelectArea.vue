@@ -1,21 +1,18 @@
 <template>
   <div class="select-area">
-    <form action="">
-      <satellite-name></satellite-name>
-      <operators></operators>
-      <coverage></coverage>
-      <frequency></frequency>
-      <orbit></orbit>
-      <launch-time></launch-time>
-      <foot></foot>
-      
-    </form>
+    <satellite-name></satellite-name>
+    <operators></operators>
+    <coverage></coverage>
+    <frequency></frequency>
+    <orbit></orbit>
+    <launch-time></launch-time>
+    <foot></foot>
   </div>
 </template>
 
 <script>
 import Coverage from "./Coverage.vue";
-import Foot from './Foot.vue';
+import Foot from "./Foot.vue";
 import Frequency from "./Frequency.vue";
 import LaunchTime from "./LaunchTime.vue";
 import Operators from "./Operators.vue";
@@ -35,7 +32,7 @@ export default {
 </script>
 
 <style>
-  .select-area{
-    margin-left: 20px;
-  }
+.select-area {
+  margin-left: 20px;
+}
 </style>

@@ -1,30 +1,21 @@
-import { getSatResource } from "@/network/satResource"
+import satResource from "@/data/satResource.json"
+import { showCoverage } from './satCoverage'
 import { viewer } from "../init3dMap"
 import { CzmlDataSource, ScreenSpaceEventHandler, ScreenSpaceEventType } from 'cesium'
 import { stationarySatellite } from "@/assets/data/stationarySatellite"
 import { Lmap } from "../init2dMap"
 import L from 'leaflet'
 import store from '@/store'
-export let searchedSatCollection, satMarkers, marker;
+export let searchedSatCollection, searchedSatCollectionLength, satMarkers, marker;
 export let markersAll = [];
+
 //获取全部卫星
-export const getSatCollection = (map) => {
-  if (sessionStorage.getItem("allSatCollection") == null) { //如果缓存中没有卫星数据的话
-    getSatResource().then(res => {
-      if (res.length > 0) {
-        searchedSatCollection = res;
-        sessionStorage.setItem("allSatCollection", JSON.stringify(searchedSatCollection)) //保存到缓存中
-        SatOrbit(searchedSatCollection, map, true) //添加卫星点以及轨道
-      }
-    });
-  } else { //如果缓存中有数据
-    SatOrbit(JSON.parse(sessionStorage.getItem("allSatCollection")), map, true) //添加卫星点以及轨道
-  }
+export const getSatCollection = (map, Vue) => {
+  SatOrbit(satResource, map, Vue)
 }
 
-let searchedSatCollectionLength = 0;
 //添加卫星
-export const SatOrbit = (searchedSatCollection, map, handlerState) => {
+export const SatOrbit = (searchedSatCollection, map, Vue) => {
   searchedSatCollectionLength = searchedSatCollection.length;
   if (map == "3dmap") {
     viewer.dataSources.removeAll(true);
@@ -60,25 +51,24 @@ export const SatOrbit = (searchedSatCollection, map, handlerState) => {
       }
     }, ScreenSpaceEventType.MOUSE_MOVE);
 
-    if (handlerState) { //鼠标点击卫星
-      handler.setInputAction(function (movement) {
-        var pick = viewer.scene.pick(movement.position);
-        if (pick != null) { //鼠标点击卫星后
-          if (pick.id._label) {
-            if (pick.id._label._text._value != "CHINASAT_6A_37150") {
-              searchedSatCollection.forEach(f => {
-                if (f.satEName == pick.id._label._text._value) {
-                  store.commit('endMiniPanel')
-                  store.commit('startPanel');
-                  store.commit('setParamsEasy', f);
-                  store.commit('endEarthPanel')
-                }
-              })
-            }
+    handler.setInputAction(function (movement) {
+      var pick = viewer.scene.pick(movement.position);
+      if (pick != null) { //鼠标点击卫星后
+        if (pick.id._label) {
+          if (pick.id._label._text._value != "CHINASAT_6A_37150") {
+            searchedSatCollection.forEach(f => {
+              if (f.satEName == pick.id._label._text._value) {
+                showCoverage(f, map, Vue)
+                store.commit('endMiniPanel')
+                store.commit('startPanel');
+                store.commit('setParamsEasy', f);
+                store.commit('endEarthPanel')
+              }
+            })
           }
         }
-      }, ScreenSpaceEventType.LEFT_CLICK);
-    }
+      }
+    }, ScreenSpaceEventType.LEFT_CLICK);
 
 
     handler.setInputAction(function () { //三维球放大缩小事件
@@ -125,6 +115,7 @@ export const SatOrbit = (searchedSatCollection, map, handlerState) => {
     // 添加卫星移入以及点击事件
     markersAll.forEach((marker) => {
       marker.on("click", function () {
+        showCoverage(marker.options.attribute, map, Vue)
         store.commit('endMiniPanel')
         store.commit('startPanel');
         store.commit('setParams', this);
@@ -135,7 +126,9 @@ export const SatOrbit = (searchedSatCollection, map, handlerState) => {
         satNameDiv.style.display = "block";
         satNameDiv.style.left = e.containerPoint.x + 10 + "px";
         satNameDiv.style.top = e.containerPoint.y + 100 + "px";
-        satNameDiv.innerHTML = "卫星名称:" + e.target.options.title;
+        const position = e.target.options.attribute.satPosition > 0 ? e.target.options.attribute.satPosition + '°E' : -e.target.options.attribute.satPosition + '°W'
+        satNameDiv.innerHTML = `卫星名称 ${e.target.options.title}<br />卫星轨位 ${position}
+        <br />卫星用途 ${e.target.options.attribute.satFunction}`
       });
       marker.on("mouseout", function () {
         var satNameDiv = document.getElementById("satellite-name");
@@ -154,8 +147,8 @@ export const SatOrbit = (searchedSatCollection, map, handlerState) => {
 //添加赤道线
 function addEquatorLine() {
   var latlngs = [
-    [0, -180],
-    [0, 180]
+    [0, 180],
+    [0, -180]
   ];
   L.polyline(latlngs, { color: 'red', opacity: '1', weight: '2', dashArray: '4' }).addTo(Lmap);
 }
