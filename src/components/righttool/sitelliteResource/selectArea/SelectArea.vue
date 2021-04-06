@@ -1,12 +1,12 @@
 <template>
   <div class="select-area">
-    <satellite-name></satellite-name>
-    <operators></operators>
-    <coverage></coverage>
-    <frequency></frequency>
-    <orbit></orbit>
-    <launch-time></launch-time>
-    <foot></foot>
+    <satellite-name ref="name"></satellite-name>
+    <operators ref="operator"></operators>
+    <coverage ref="cov"></coverage>
+    <frequency ref="fre"></frequency>
+    <orbit ref="orb"></orbit>
+    <launch-time ref="time"></launch-time>
+    <el-button @click="btnClick" size="small" type="primary">重置</el-button>
   </div>
 </template>
 
@@ -28,11 +28,25 @@ export default {
     LaunchTime,
     Foot,
   },
+  methods: {
+    btnClick() {
+      this.$refs.name.selectedSatName = "";
+      this.$refs.operator.checkedOperators = [];
+      this.$refs.fre.selectedFrequency = [];
+      this.$refs.orb.selectedOrbit = [];
+      this.$refs.time.launchTime = [];
+    },
+  },
 };
 </script>
 
-<style>
+<style scoped>
 .select-area {
-  margin-left: 20px;
+  padding-left: 20px;
+}
+
+.el-button {
+  display: block;
+  margin: 0 auto;
 }
 </style>

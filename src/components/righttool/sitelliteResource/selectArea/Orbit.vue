@@ -5,7 +5,7 @@
     </div>
     <input type="text" placeholder="西经" v-model="selectedOrbit[0]" maxlength=4 />
     <span>°W</span>
-    <span class="zhi">至</span>
+    <span class="zhi">-</span>
     <input type="text" placeholder="东经" v-model="selectedOrbit[1]" maxlength=4 />
     <span>°E</span>
   </div>
@@ -23,16 +23,19 @@ export default {
   // watch开始
   watch: {
     selectedOrbit(newValue) {
-      if (!timer) {
+      this.$store.commit("getSelectedOrbit", newValue);
+/*       if (!timer) {
         timer = window.setTimeout(() => {
           this.$store.commit("getSelectedOrbit", newValue);
-        }, 1000);
+          timer = null
+        }, 2000);
       } else {
         window.clearTimeout(timer);
         timer = window.setTimeout(() => {
           this.$store.commit("getSelectedOrbit", newValue);
-        }, 1000);
-      }
+          timer = null
+        }, 2000);
+      } */
     },
   },
 };
@@ -40,7 +43,7 @@ export default {
 
 <style scoped>
 .orbit {
-  margin-bottom: 30px;
+  margin-bottom: 20px;
 }
 .title {
   font-size: 13pt;
@@ -54,7 +57,7 @@ export default {
 
 input {
   box-sizing: border-box;
-  width: 60px;
+  width: 80px;
   margin-top: 6px;
   border: none;
   outline: none;
@@ -62,6 +65,7 @@ input {
   background-color: transparent;
   color: #a1aeb3;
   padding: 0 6px;
+  padding-left: 25px;
 }
 
 input:focus {
@@ -77,6 +81,6 @@ span {
 }
 
 .zhi {
-  margin: 0 10px;
+  margin: 0 20px;
 }
 </style>

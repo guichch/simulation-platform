@@ -1,1 +1,1 @@
-console.log('png'.match(/png/))
+console.log([] || [1])

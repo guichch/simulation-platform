@@ -5,7 +5,7 @@
     </div>
     <el-date-picker v-model="launchTime[0]" type="date" :picker-options="startPickOptions" @change="startTime" placeholder="开始时间">
     </el-date-picker>
-    <span class="zhi">至</span>
+    <span class="zhi">-</span>
     <el-date-picker v-model="launchTime[1]" type="date" :picker-options="endPickOptions" @change="endTime" placeholder="结束时间">
     </el-date-picker>
   </div>
@@ -53,7 +53,7 @@ export default {
 
 <style scoped lang='scss'>
 .launch-time {
-  margin-bottom: 30px;
+  margin-bottom: 20px;
 }
 .title {
   font-size: 13pt;
@@ -65,8 +65,18 @@ export default {
   padding-left: 10px;
 }
 
+/* .el-data-picker {
+  cursor: pointer;
+} */
+
 .launch-time /deep/ .el-input{
   width: 140px;
+  .el-input__prefix,
+  .el-input__suffix {
+    margin-top: 5px;
+    line-height: 1.15;
+  }
+  
 }
 
 .launch-time /deep/ .el-input__inner {
@@ -75,6 +85,9 @@ export default {
   color: #fff;
   border-bottom: 1px solid #7c8e97;
   border-radius: 0;
+  line-height: 1.15;
+  padding-top: 10px;
+  cursor: pointer;
 }
 
 .launch-time /deep/ .el-input__inner:focus {
@@ -83,6 +96,6 @@ export default {
 
 .zhi{
   color: white;
-  margin: 0 5px;
+  margin: 0 20px;
 }
 </style>

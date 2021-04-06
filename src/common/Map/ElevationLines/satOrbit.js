@@ -8,6 +8,7 @@ import L from 'leaflet'
 import store from '@/store'
 export let searchedSatCollection, searchedSatCollectionLength, satMarkers, marker;
 export let markersAll = [];
+let once = false
 
 //获取全部卫星
 export const getSatCollection = (map, Vue) => {
@@ -22,81 +23,62 @@ export const SatOrbit = (searchedSatCollection, map, Vue) => {
     if (searchedSatCollectionLength > 100) {
       //添加卫星
       viewer.dataSources.add(CzmlDataSource.load(buildCZML(searchedSatCollection)));
+    } else {
+      //添加卫星
+      viewer.dataSources.add(CzmlDataSource.load(buildCZMLImage(searchedSatCollection)));
     }
-    //添加卫星
-    viewer.dataSources.add(CzmlDataSource.load(buildCZMLImage(searchedSatCollection)));
+
     //添加卫星轨道
     viewer.dataSources.add(CzmlDataSource.load(stationarySatellite));
 
-    var handler = new ScreenSpaceEventHandler(viewer.scene.canvas);
-    handler.setInputAction(function (movement) { //鼠标移动到轨道上的卫星的时候，显示卫星基本详情
-      var pick = viewer.scene.pick(movement.endPosition);
-      var satNameDiv = document.getElementById("satellite-name");
-      if (pick != null) { //鼠标在卫星上
-        if (pick.id._label) {
-          if (pick.id._label._text._value != "CHINASAT_6A_37150") {
-            satNameDiv.style.display = "block"
-            satNameDiv.style.left = movement.endPosition.x + 10 + "px"
-            satNameDiv.style.top = movement.endPosition.y + 100 + "px"
-            searchedSatCollection.forEach(f => {
-              if (f.satEName == pick.id._label._text._value) {
+    // 添加地图事件
+    if (!once) {
+      once = true
+      const handler = new ScreenSpaceEventHandler(viewer.scene.canvas);
+      handler.setInputAction(function (movement) { //鼠标移动到轨道上的卫星的时候，显示卫星基本详情
+        const pick = viewer.scene.pick(movement.endPosition);
+        const satNameDiv = document.getElementById("satellite-name");
+        if (pick !== undefined) { //鼠标在卫星上
+          // console.log(pick)
+          if (pick.id._label) {
+            if (pick.id._label._text._value != "CHINASAT_6A_37150") {
+              satNameDiv.style.display = "block"
+              satNameDiv.style.left = movement.endPosition.x + 10 + "px"
+              satNameDiv.style.top = movement.endPosition.y + 100 + "px"
+              searchedSatCollection.forEach(f => {
+                if (f.satEName == pick.id._label._text._value) {
 
-                satNameDiv.innerHTML = "卫星名称:" + f.satEName + "</br>卫星轨位:" + orbitalEorW(f.satPosition) + "</br>卫星用途:" + f.satFunction + ""
-              }
-            })
+                  satNameDiv.innerHTML = "卫星名称:" + f.satEName + "</br>卫星轨位:" + orbitalEorW(f.satPosition) + "</br>卫星用途:" + f.satFunction + ""
+                }
+              })
+            }
+          }
+        } else { //鼠标不在卫星上
+          satNameDiv.style.display = "none"
+        }
+      }, ScreenSpaceEventType.MOUSE_MOVE);
+
+      handler.setInputAction(function (movement) {
+        var pick = viewer.scene.pick(movement.position);
+        if (pick != null) { //鼠标点击卫星后
+          if (pick.id._label) {
+            if (pick.id._label._text._value != "CHINASAT_6A_37150") {
+              searchedSatCollection.forEach(f => {
+                if (f.satEName == pick.id._label._text._value) {
+                  showCoverage(f, map, Vue)
+                  store.commit('endMiniPanel')
+                  store.commit('startPanel');
+                  store.commit('setParamsEasy', f);
+                  store.commit('endEarthPanel')
+                }
+              })
+            }
           }
         }
-      } else { //鼠标不在卫星上
-        satNameDiv.style.display = "none"
-      }
-    }, ScreenSpaceEventType.MOUSE_MOVE);
-
-    handler.setInputAction(function (movement) {
-      var pick = viewer.scene.pick(movement.position);
-      if (pick != null) { //鼠标点击卫星后
-        if (pick.id._label) {
-          if (pick.id._label._text._value != "CHINASAT_6A_37150") {
-            searchedSatCollection.forEach(f => {
-              if (f.satEName == pick.id._label._text._value) {
-                showCoverage(f, map, Vue)
-                store.commit('endMiniPanel')
-                store.commit('startPanel');
-                store.commit('setParamsEasy', f);
-                store.commit('endEarthPanel')
-              }
-            })
-          }
-        }
-      }
-    }, ScreenSpaceEventType.LEFT_CLICK);
-
-
-    handler.setInputAction(function () { //三维球放大缩小事件
-      if (searchedSatCollectionLength > 100) {
-        var height = viewer.camera.positionCartographic.height;
-        if (height < 9000000) { //低于900万公里的话
-          viewer._dataSourceCollection._dataSources[0]._entityCollection._entities._array.forEach(f => { //隐藏卫星点
-            f._show = false
-          })
-          viewer._dataSourceCollection._dataSources[1]._entityCollection._entities._array.forEach(f1 => { //显示卫星图标
-            f1._show = true
-          })
-        }
-        if (height > 9000000) { //高于900万公里的话
-          viewer._dataSourceCollection._dataSources[0]._entityCollection._entities._array.forEach(f => { //显示卫星点
-            f._show = true
-          })
-          viewer._dataSourceCollection._dataSources[1]._entityCollection._entities._array.forEach(f1 => { //隐藏卫星图标
-            f1._show = false
-          })
-        }
-      }
-    }, ScreenSpaceEventType.WHEEL);
-    if (searchedSatCollectionLength > 100) {
-      viewer._dataSourceCollection._dataSources[1]._entityCollection._entities._array.forEach(f1 => {
-        f1._show = false
-      })
+      }, ScreenSpaceEventType.LEFT_CLICK);
     }
+
+
   } else {
     // satMarkers = new L.MarkerClusterGroup();
     for (var j = 0; j < searchedSatCollection.length; j++) {

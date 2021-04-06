@@ -2,26 +2,18 @@ import * as Cesium from 'cesium';
 import { viewer } from "../init3dMap";
 import { Lmap } from "../init2dMap"
 import L from 'leaflet'
-var EarthStationView = [],
-  EarthStationView2 = [];
-export const allEarthStationData2DMap = [];
+import store from '@/store'
+let EarthStationView = [], EarthStationView2 = [], EarthStationDataAll = [];
+let once = false;
+
 
 //添加地球站点
-export let addPointEarthStation = (EarthStationData, map, obj) => {
-  var imageURL = "";
-  if (EarthStationView.length > 0) {
-    clearPointEarthStation()
-  }
-  if (allEarthStationData2DMap.length > 0) {
-    clearPointEarthStation2()
-  }
+export let addPointEarthStation = (EarthStationData, map) => {
+  let imageURL = "";
   EarthStationData.forEach(data => {
-    if (data.teleportOwnership) {
-      imageURL = "/img/earthstation1.png"
-    } else if (!data.teleportOwnership) {
-      imageURL = "/img/earthstation2.png"
-    }
+    imageURL = data.teleportOwnership ? "/img/earthstation1.png" : "/img/earthstation2.png"
     if (map == "3dmap") {
+      EarthStationDataAll.push(...EarthStationData)
       EarthStationView.push( //EarthStationView保存所有的地球站点
         viewer.entities.add({
           name: "地球站",
@@ -37,7 +29,24 @@ export let addPointEarthStation = (EarthStationData, map, obj) => {
           }
         })
       )
-    } else if (map == "2dmap") {
+      if (!once) {
+        once = true
+        const handler = new Cesium.ScreenSpaceEventHandler(viewer.scene.canvas);
+        handler.setInputAction(movement => {
+          const pick = viewer.scene.pick(movement.position)
+          if (pick && pick.id._name == '地球站') {
+            let row = null
+            EarthStationDataAll.forEach(f => {
+              if (f.teleportName == pick.id._id) row = f
+            })
+            store.commit('startEarthPanel')
+            store.commit('endPanel');
+            store.commit('setEarthInfo', row)
+          }
+        }, Cesium.ScreenSpaceEventType.LEFT_CLICK)
+      }
+
+    } else {
       var satIcon = L.icon({
         iconUrl: imageURL,
         iconSize: [24, 25],
@@ -45,38 +54,12 @@ export let addPointEarthStation = (EarthStationData, map, obj) => {
       let marker = new L.Marker(L.latLng(data.teleportLatitude, data.teleportLongitude), { icon: satIcon, attribute: data }).addTo(Lmap);
       EarthStationView2.push(marker); //EarthStationView2保存所有的地球站点
       marker.on('click', function (e) { //点击地球站点，显示地球站点的信息
-        obj.$store.commit('startEarthPanel')
-        obj.$store.commit('endPanel');
-        obj.$store.commit('setEarthInfo', this.options.attribute)
+        store.commit('startEarthPanel')
+        store.commit('endPanel');
+        store.commit('setEarthInfo', this.options.attribute)
       });
-      //需要测试
-      allEarthStationData2DMap.push(marker)
     }
   })
-
-  if (map == "3dmap") {
-    var handler = new Cesium.ScreenSpaceEventHandler(viewer.scene.canvas);
-    handler.setInputAction(function (movement) { //点击地球站点，显示地球站点的信息
-      var pick = viewer.scene.pick(movement.position);
-      if (pick != null) {
-        if (pick.id._name == "地球站") {
-          let row = null;
-          EarthStationData.forEach(f => {
-            if (f.teleportName == pick.id._id) {
-              row = f
-            }
-          })
-          //点击地球站点，显示地球站点的信息
-          console.log(row)
-          obj.$store.commit('startEarthPanel')
-          obj.$store.commit('endPanel');
-          obj.$store.commit('setEarthInfo', row)
-        }
-
-      }
-    }, Cesium.ScreenSpaceEventType.LEFT_CLICK);
-
-  }
 }
 
 //清除地球站点-三维
@@ -85,6 +68,7 @@ export const clearPointEarthStation = () => {
     viewer.entities.remove(data)
   })
   EarthStationView = [];
+  EarthStationDataAll = []
 }
 
 //清除地球站点-二维

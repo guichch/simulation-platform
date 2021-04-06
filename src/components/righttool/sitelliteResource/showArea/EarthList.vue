@@ -6,7 +6,7 @@
       @row-click="rowClick"
       height="300"
     >
-      <template slot="empty"> 请先选择卫星运营商 </template>
+      <template slot="empty"> 请选择卫星运营商 </template>
       <el-table-column
         v-for="(item, index) in earthField"
         :key="index"
@@ -20,8 +20,15 @@
 </template>
 
 <script>
-import { getEarthList } from "@/network/earthList";
-import { addPointEarthStation } from "@/common/Map/EarthStation/EarthStationOperation";
+import { addPointEarthStation, clearPointEarthStation, clearPointEarthStation2 } from "@/common/Map/EarthStation/EarthStationOperation";
+import ChinaSatcom from '@/data/EarthList/ChinaSatcom'
+import APSTAR from '@/data/EarthList/APSTAR'
+import ASIASAT from '@/data/EarthList/ASIASAT'
+import Intelsat from '@/data/EarthList/Intelsat'
+import Eutelsat from '@/data/EarthList/Eutelsat'
+import Telesat from '@/data/EarthList/Telesat'
+import SES from '@/data/EarthList/SES'
+import JSAT from '@/data/EarthList/JSAT'
 export default {
   // data 开始
   data() {
@@ -66,26 +73,19 @@ export default {
   // watch 开始
   watch: {
     selectedOperatorList(newValue) {
+      this.currentEarthList = [];
       const map =
         this.$route.fullPath.indexOf("2dmap") == -1 ? "3dmap" : "2dmap";
-      if (newValue.length) {
-        if (localStorage.getItem(newValue.toString()) !== null) {
-          this.currentEarthList = JSON.parse(
-            localStorage.getItem(newValue.toString())
-          );
-          addPointEarthStation(this.currentEarthList, map, this);
-        } else {
-          getEarthList(newValue).then((res) => {
-            this.$store.commit("startLoading");
-            this.currentEarthList = res;
-            addPointEarthStation(this.currentEarthList, map, this);
-            this.$store.commit("endLoading");
+      map == '2dmap' ? clearPointEarthStation2() : clearPointEarthStation()
+      newValue.forEach(element => {
+        if (element !== "others") {
+          import(`@/data/EarthList/${element}`).then((res) => {
+            this.currentEarthList.push(...res.default);
+            addPointEarthStation(this.currentEarthList, map);
+            this.currentEarthList = []
           });
         }
-      } else {
-        this.currentEarthList = [];
-        addPointEarthStation(this.currentEarthList, map, this);
-      }
+      });
     },
   },
 

@@ -1,7 +1,7 @@
 <template>
   <div class="satellite-list">
     <el-table
-      :data="currentSatList"
+      :data="selectedSatList"
       style="width: 98%"
       @row-click="rowClick"
       height="300"
@@ -13,7 +13,7 @@
         :label="item.label"
         :width="item.width"
       >
-        <template slot-scope="scope">
+        <template #default="scope">
           <span v-if="item.key === 'satPosition'">
             <span v-if="scope.row.satPosition > 0"
               >{{ scope.row.satPosition }}°E</span
@@ -31,31 +31,38 @@
     </el-table>
     <div style="margin-top: 20px">
       <el-button type="primary" size="mini" @click="allSat">全部卫星</el-button>
+      <el-button type="primary" size="mini" @click="clearCov"
+        >清除覆盖</el-button
+      >
       <el-button type="primary" size="mini" @click="showNumber"
         >统计数量</el-button
       >
-      <span style="margin-left: 10px; color: white" v-if="isShowNumber"
-        >{{ currentSatList.length }}个卫星, {{ orbit }}个轨位</span
+      <el-button type="primary" size="mini" @click="clearNumber"
+        >隐藏数量</el-button
       >
+      <div style="margin-left: 10px; color: white" v-if="isShowNumber">
+        {{ selectedSatList.length }}个卫星, {{ orbit }}个轨位
+      </div>
     </div>
   </div>
 </template>
 
 <script>
-import { getSatResource } from "@/network/satResource";
+import satResource from "@/data/satResource.json";
 
 import {
   SatOrbit,
   clearSatellite2DMap,
 } from "@/common/Map/ElevationLines/satOrbit";
 import {
-  showCoverage
+  showCoverage,
+  deleteSurfaceBeam,
+  deleteSurfaceBeam2DMap,
 } from "@/common/Map/ElevationLines/satCoverage";
 export default {
   // data开始
   data() {
     return {
-      satList: [],
       satField: [
         {
           key: "satOperator",
@@ -78,59 +85,25 @@ export default {
         },
       ],
       isShowNumber: false,
-      // currentSatList: [],
       initSatList: [],
-      // selectedSatList: [],
       selectedSatNameList: [],
       selectedSatOperatorList: [],
       selectedSatLaunchTimeList: [],
       selectedSatOrbitList: [],
-      map: '',
+      map: "",
     };
   },
   // data结束
 
   // 钩子函数
   created() {
-    if (localStorage.getItem("allSatCollection")) {
-      JSON.parse(localStorage.getItem("allSatCollection")).forEach((sat) => {
-        if (
-          sat.satEName === "CHINASAT 6A" ||
-          sat.satEName === "APSTAR 6" ||
-          sat.satEName === "APSTAR 5" ||
-          sat.satEName === "Intelsat 709" ||
-          sat.satEName === "Eutelsat 12WB" ||
-          sat.satEName === "N-STAR C" ||
-          sat.satEName === "ASTAR 1M" ||
-          sat.satEName === "Telstar 14" ||
-          sat.satEName === "Korea 5"
-        ) {
-          this.initSatList.push(sat);
-        }
-      });
-      this.satList = JSON.parse(sessionStorage.getItem("allSatCollection"));
-    } else {
-      getSatResource().then((res) => {
-        console.log(res);
-        res.forEach((sat) => {
-          if (
-            sat.satEName === "CHINASAT 6A" ||
-            sat.satEName === "APSTAR 6" ||
-            sat.satEName === "APSTAR 5" ||
-            sat.satEName === "Intelsat 709" ||
-            sat.satEName === "Eutelsat 12WB" ||
-            sat.satEName === "N-STAR C" ||
-            sat.satEName === "ASTAR 1M" ||
-            sat.satEName === "Telstar 14" ||
-            sat.satEName === "Korea 5"
-          ) {
-            this.initSatList.push(sat);
-          }
-        });
-        this.satList = res;
-        sessionStorage.setItem("allSatCollection", JSON.stringify(res));
-      });
-    }
+    satResource.forEach((sat) => {
+      this.initSatList.push(sat);
+      this.selectedSatNameList.push(sat);
+      this.selectedSatOperatorList.push(sat);
+      this.selectedSatLaunchTimeList.push(sat);
+      this.selectedSatOrbitList.push(sat);
+    });
   },
   // 钩子函数结束
 
@@ -141,10 +114,10 @@ export default {
       this.$store.commit("startPanel");
       this.$store.commit("endEarthPanel");
       this.$store.commit("endMiniPanel");
-      if (this.$route.fullPath.indexOf('2dmap') !== -1) {
-        this.map = '2dmap'
+      if (this.$route.fullPath.indexOf("2dmap") !== -1) {
+        this.map = "2dmap";
       } else {
-        this.map = '3dmap'
+        this.map = "3dmap";
       }
       showCoverage(row, this.map, this);
     },
@@ -154,7 +127,16 @@ export default {
     showNumber() {
       this.isShowNumber = true;
     },
-
+    clearCov() {
+      if (this.$route.fullPath.indexOf("2dmap") !== -1) {
+        deleteSurfaceBeam2DMap();
+      } else {
+        deleteSurfaceBeam();
+      }
+    },
+    clearNumber() {
+      this.isShowNumber = false;
+    },
   },
 
   // methods结束
@@ -162,102 +144,35 @@ export default {
   // computed开始
   computed: {
     orbit() {
-      let orbit = [];
-      let num = 0;
-      this.currentSatList.forEach((sat) => {
+      const orbit = [];
+      this.selectedSatList.forEach((sat) => {
         if (orbit.indexOf(sat.satPosition) === -1) {
-          num = num + 1;
+          orbit.push(sat.satPosition);
         }
       });
-      return num;
+      return orbit.length;
     },
 
     selectedSatList() {
       let union = [];
-      if (this.selectedSatNameList.length) {
+      this.selectedSatNameList.forEach((sat) => {
         if (
-          (this.selectedSatOperatorList.includes(this.selectedSatNameList[0]) ||
-            this.selectedSatOperatorList.length == 0) &&
-          (this.selectedSatLaunchTimeList.includes(
-            this.selectedSatNameList[0]
-          ) ||
-            this.selectedSatLaunchTimeList.length == 0) &&
-          (this.selectedSatOrbitList.includes(this.selectedSatNameList[0]) ||
-            this.selectedSatOrbitList.length == 0)
+          this.selectedSatOperatorList.includes(sat) &&
+          this.selectedSatLaunchTimeList.includes(sat) &&
+          this.selectedSatOrbitList.includes(sat)
         ) {
-          union.push(this.selectedSatNameList[0]);
+          union.push(sat);
         }
-        return union;
-      } else {
-        if (
-          this.selectedSatOperatorList.length == 0 &&
-          this.selectedSatLaunchTimeList.length == 0 &&
-          this.selectedSatOrbitList.length == 0
-        ) {
-          return union;
-        } else if (
-          (this.selectedSatLaunchTimeList.length == 0 &&
-            this.selectedSatOrbitList.length == 0) ||
-          (this.selectedSatOperatorList.length == 0 &&
-            this.selectedSatOrbitList.length == 0) ||
-          (this.selectedSatOperatorList.length == 0 &&
-            this.selectedSatLaunchTimeList.length == 0)
-        ) {
-          this.selectedSatLaunchTimeList.forEach((sat) => {
-            union.push(sat);
-          });
-          this.selectedSatOperatorList.forEach((sat) => {
-            union.push(sat);
-          });
-          this.selectedSatOrbitList.forEach((sat) => {
-            union.push(sat);
-          });
-          return union;
-        } else if (this.selectedSatOperatorList.length == 0) {
-          this.selectedSatLaunchTimeList.forEach((sat) => {
-            if (this.selectedSatOrbitList.includes(sat)) {
-              union.push(sat);
-            }
-          });
-          return union;
-        } else if (this.selectedSatLaunchTimeList.length == 0) {
-          this.selectedSatOperatorList.forEach((sat) => {
-            if (this.selectedSatOrbitList.includes(sat)) {
-              union.push(sat);
-            }
-          });
-          return union;
-        } else if (this.selectedSatOrbitList.length == 0) {
-          this.selectedSatOperatorList.forEach((sat) => {
-            if (this.selectedSatLaunchTimeList.includes(sat)) {
-              union.push(sat);
-            }
-          });
-          return union;
-        } else {
-          this.selectedSatOperatorList.forEach((sat) => {
-            if (
-              this.selectedSatLaunchTimeList.includes(sat) &&
-              this.selectedSatOrbitList.includes(sat)
-            ) {
-              union.push(sat);
-            }
-          });
-          return union;
-        }
+      });
+      if (!union.length) {
+        this.$message.error('无满足选择结果的卫星，显示全部卫星资源')
+        return this.initSatList
       }
-    },
-
-    currentSatList() {
-      return this.selectedSatList.length
-        ? this.selectedSatList
-        : this.initSatList;
+      return union;
     },
 
     selectedSatName() {
-      // console.log(this.$store.state.rightPanel.selectedOperator)
       return this.$store.state.rightPanel.selectedSatName;
-      // return this.$store.state.rightPanel
     },
     selectedOperator() {
       return this.$store.state.rightPanel.selectedOperator;
@@ -275,21 +190,24 @@ export default {
     selectedSatName(newValue) {
       this.selectedSatNameList = [];
       this.selectedSatNameList.push(
-        ...this.satList.filter((sat) => {
+        ...this.initSatList.filter((sat) => {
           return sat.satEName === newValue;
         })
       );
+      this.selectedSatNameList = this.selectedSatNameList.length
+        ? this.selectedSatNameList
+        : this.initSatList;
     },
     selectedOperator(newValue) {
       this.selectedSatOperatorList = [];
       this.selectedSatOperatorList.push(
-        ...this.satList.filter((sat) => {
+        ...this.initSatList.filter((sat) => {
           return newValue.includes(sat.satOperator);
         })
       );
       if (newValue.includes("others")) {
         this.selectedSatOperatorList.push(
-          ...this.satList.filter((sat) => {
+          ...this.initSatList.filter((sat) => {
             return (
               sat.satOperator !== "ChinaSatcom" &&
               sat.satOperator !== "APSTAR" &&
@@ -303,6 +221,9 @@ export default {
           })
         );
       }
+      this.selectedSatOperatorList = this.selectedSatOperatorList.length
+        ? this.selectedSatOperatorList
+        : this.initSatList;
     },
     selectedOrbit(newValue) {
       this.selectedSatOrbitList = [];
@@ -310,10 +231,16 @@ export default {
         const west = -Number(newValue[0]);
         const east = Number(newValue[1]);
         this.selectedSatOrbitList.push(
-          ...this.satList.filter((sat) => {
+          ...this.initSatList.filter((sat) => {
             return sat.satPosition >= west && sat.satPosition <= east;
           })
         );
+      }
+      if (!this.selectedSatOrbitList.length) {
+        if (newValue[0] && newValue[1]) {
+          this.$message.error("所选区间无卫星，选择结果无效");
+        }
+        this.selectedSatOrbitList = this.initSatList;
       }
     },
     selectedLaunchTime(newValue) {
@@ -322,7 +249,7 @@ export default {
         const startTime = newValue[0].getTime();
         const endTime = newValue[1].getTime();
         this.selectedSatLaunchTimeList.push(
-          ...this.satList.filter((sat) => {
+          ...this.initSatList.filter((sat) => {
             return (
               new Date(sat.satLaunchTime).getTime() >= startTime &&
               new Date(sat.satLaunchTime).getTime() <= endTime
@@ -330,27 +257,22 @@ export default {
           })
         );
       }
+      if (!this.selectedSatLaunchTimeList.length) {
+        if (newValue[0] && newValue[1]) {
+          this.$message.error("所选区间无卫星，选择结果无效");
+        }
+        this.selectedSatLaunchTimeList = this.initSatList;
+      }
     },
     selectedSatList(newValue) {
       if (this.$route.fullPath.indexOf("2dmap") !== -1) {
-        if (newValue.length > 0) {
-          clearSatellite2DMap();
-          SatOrbit(newValue, "2dmap", true);
-        } else {
-          clearSatellite2DMap();
-          SatOrbit(this.satList, "2dmap", true);
-        }
+        clearSatellite2DMap();
+        SatOrbit(newValue, "2dmap", this);
       } else {
-        if (newValue.length > 0) {
-          // clearSatellite2DMap();
-          SatOrbit(newValue, "3dmap", true);
-        } else {
-          // clearSatellite2DMap();
-          SatOrbit(this.satList, "3dmap", true);
-        }
+        SatOrbit(newValue, "3dmap", this);
       }
     },
-    deep: true,
+    deep: true
   },
 
   // watch结束

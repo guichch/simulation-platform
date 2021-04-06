@@ -1,55 +1,76 @@
 import {
-    ScreenSpaceEventHandler,
-    Math as CesiumMath,
-    ScreenSpaceEventType
+  ScreenSpaceEventHandler,
+  Math as CesiumMath,
+  ScreenSpaceEventType
 } from 'cesium'
 
 import { viewer } from './init3dMap'
 
-export default function(Map) {
+export default function (Vue) {
+  const handler = new ScreenSpaceEventHandler(viewer.scene.canvas);
 
+  handler.setInputAction(e => {
     //设置鼠标移动事件的处理函数，这里负责监听x,y坐标值变化
-    new ScreenSpaceEventHandler(viewer.scene.canvas).setInputAction(movement => {
+    let ellipsoid = viewer.scene.globe.ellipsoid;
+    let cartesian = viewer.camera.pickEllipsoid(e.endPosition, ellipsoid);
 
-        let ellipsoid = viewer.scene.globe.ellipsoid;
-        let cartesian = viewer.camera.pickEllipsoid(movement.endPosition, ellipsoid);
+    if (cartesian) {
+      //将笛卡尔坐标转换为地理坐标
+      var cartographic = ellipsoid.cartesianToCartographic(cartesian);
 
-        if (cartesian) {
+      //将弧度转为度的十进制度表示
+      let longitude = CesiumMath.toDegrees(cartographic.longitude).toFixed(4);
+      let latitude = CesiumMath.toDegrees(cartographic.latitude).toFixed(4);
 
-            //将笛卡尔坐标转换为地理坐标
-            var cartographic = ellipsoid.cartesianToCartographic(cartesian);
+      //南纬是负，北纬是正，东经是正，西经是负(N北纬 S南纬 E东经 W西经)
+      if (latitude < 0) {
+        latitude = -latitude + "°S"
+      } else if (latitude > 0) {
+        latitude = latitude + "°N"
+      } else {
+        latitude = latitude + "°"
+      }
 
-            //将弧度转为度的十进制度表示
-            let longitude = CesiumMath.toDegrees(cartographic.longitude).toFixed(4);
-            let latitude = CesiumMath.toDegrees(cartographic.latitude).toFixed(4);
+      if (longitude < 0) {
+        longitude = -longitude + "°W"
+      } else if (longitude > 0) {
+        longitude = longitude + "°E"
+      } else {
+        longitude = longitude + "°"
+      }
 
-            //南纬是负，北纬是正，东经是正，西经是负(N北纬 S南纬 E东经 W西经)
-            if (latitude < 0) {
-                latitude = -latitude + "°S"
-            } else if (latitude > 0) {
-                latitude = latitude + "°N"
-            } else {
-                latitude = latitude + "°"
-            }
+      //获取相机高度
+      let height = Math.ceil(viewer.camera.positionCartographic.height);
 
-            if (longitude < 0) {
-                longitude = -longitude + "°W"
-            } else if (longitude > 0) {
-                longitude = longitude + "°E"
-            } else {
-                longitude = longitude + "°"
-            }
+      Vue.$store.commit({
+        type: 'setFootStatus',
+        isShow: true,
+        longitude,
+        latitude,
+        height
+      })
+    }
+  }, ScreenSpaceEventType.MOUSE_MOVE)
 
-            //获取相机高度
-            let height = Math.ceil(viewer.camera.positionCartographic.height);
-
-            Map.$store.commit({
-                type: 'setFootStatus',
-                isShow: true,
-                longitude,
-                latitude,
-                height
-            })
-        }
-    }, ScreenSpaceEventType.MOUSE_MOVE);
+  handler.setInputAction(function () { //三维球放大缩小事件
+    if (searchedSatCollectionLength > 100) {
+      var height = viewer.camera.positionCartographic.height;
+      if (height < 9000000) { //低于900万公里的话
+        viewer._dataSourceCollection._dataSources[0]._entityCollection._entities._array.forEach(f => { //隐藏卫星点
+          f._show = false
+        })
+        viewer._dataSourceCollection._dataSources[1]._entityCollection._entities._array.forEach(f1 => { //显示卫星图标
+          f1._show = true
+        })
+      }
+      if (height > 9000000) { //高于900万公里的话
+        viewer._dataSourceCollection._dataSources[0]._entityCollection._entities._array.forEach(f => { //显示卫星点
+          f._show = true
+        })
+        viewer._dataSourceCollection._dataSources[1]._entityCollection._entities._array.forEach(f1 => { //隐藏卫星图标
+          f1._show = false
+        })
+      }
+    }
+  }, ScreenSpaceEventType.WHEEL);
 }

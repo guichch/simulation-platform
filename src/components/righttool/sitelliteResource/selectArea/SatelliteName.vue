@@ -50,6 +50,7 @@ export default {
     },
     handleSelect() {
       window.clearTimeout(timer);
+      timer = null
       this.$store.commit("getSelectedSatName", this.selectedSatName);
     },
   },
@@ -62,11 +63,13 @@ export default {
       if (!timer) {
         timer = window.setTimeout(() => {
           this.$store.commit("getSelectedSatName", newValue);
+          timer = null
         }, 2000);
       } else {
         clearTimeout(timer);
         timer = window.setTimeout(() => {
           this.$store.commit("getSelectedSatName", newValue);
+          timer = null
         }, 2000);
       }
     },
