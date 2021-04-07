@@ -29,7 +29,7 @@
         </template>
       </el-table-column>
     </el-table>
-    <div style="margin-top: 20px">
+    <div style="margin-top: 20px; text-align: center">
       <el-button type="primary" size="mini" @click="allSat">全部卫星</el-button>
       <el-button type="primary" size="mini" @click="clearCov"
         >清除覆盖</el-button
@@ -40,7 +40,7 @@
       <el-button type="primary" size="mini" @click="clearNumber"
         >隐藏数量</el-button
       >
-      <div style="margin-left: 10px; color: white" v-if="isShowNumber">
+      <div style="margin-left: 10px; color: white" :class="{isShow: !isShowNumber}">
         {{ selectedSatList.length }}个卫星, {{ orbit }}个轨位
       </div>
     </div>
@@ -104,6 +104,7 @@ export default {
       this.selectedSatLaunchTimeList.push(sat);
       this.selectedSatOrbitList.push(sat);
     });
+    this.map = this.$route.fullPath.indexOf('2dmap') == -1 ? '3dmap' : '2dmap'
   },
   // 钩子函数结束
 
@@ -114,25 +115,16 @@ export default {
       this.$store.commit("startPanel");
       this.$store.commit("endEarthPanel");
       this.$store.commit("endMiniPanel");
-      if (this.$route.fullPath.indexOf("2dmap") !== -1) {
-        this.map = "2dmap";
-      } else {
-        this.map = "3dmap";
-      }
       showCoverage(row, this.map, this);
     },
     allSat() {
-      this.$store.commit("showAllSat");
+      this.$store.commit("showAllSat", this.map);
     },
     showNumber() {
       this.isShowNumber = true;
     },
     clearCov() {
-      if (this.$route.fullPath.indexOf("2dmap") !== -1) {
-        deleteSurfaceBeam2DMap();
-      } else {
-        deleteSurfaceBeam();
-      }
+      this.map === '2dmap' ? deleteSurfaceBeam2DMap() : deleteSurfaceBeam()
     },
     clearNumber() {
       this.isShowNumber = false;
@@ -330,5 +322,9 @@ export default {
 .satellite-list /deep/ tbody tr:hover .cell {
   color: white;
   background-color: #90c0f1;
+}
+
+.isShow {
+  visibility: hidden;
 }
 </style>

@@ -43,6 +43,8 @@ export default {
   methods: {
     change(path) {
       this.$router.push(`/home${path}`);
+      this.$store.commit('endPanel')
+      this.$store.commit('endEarthPanel')
     },
     chinaView() {
       if (this.$route.fullPath.indexOf("2dmap") !== -1) {

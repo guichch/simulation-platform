@@ -10,6 +10,8 @@ export let searchedSatCollection, searchedSatCollectionLength, satMarkers, marke
 export let markersAll = [];
 let once = false
 
+console.log(satResource)
+
 //获取全部卫星
 export const getSatCollection = (map, Vue) => {
   SatOrbit(satResource, map, Vue)

@@ -5,41 +5,9 @@
       <span>图例</span>
     </div>
     <div class="operator-list">
-      <div>
-        <div class="operator-color" style="backgroundColor: rgb(172, 60, 40)"></div>
-        <span>ChinaSatcom</span>
-      </div>
-      <div>
-        <div class="operator-color" style="backgroundColor: rgb(186, 84, 90)"></div>
-        <span>APSTAR</span>
-      </div>
-      <div>
-        <div class="operator-color" style="backgroundColor: rgb(248, 226, 87)"></div>
-        <span>ASIASAT</span>
-      </div>
-      <div>
-        <div class="operator-color" style="backgroundColor: rgb(238, 139, 1)"></div>
-        <span>Intelsat</span>
-      </div>
-      <div>
-        <div class="operator-color" style="backgroundColor: rgb(117, 72, 118)"></div>
-        <span>Eutelsat</span>
-      </div>
-      <div>
-        <div class="operator-color" style="backgroundColor: rgb(0, 206, 209)"></div>
-        <span>JSAT</span>
-      </div>
-      <div>
-        <div class="operator-color" style="backgroundColor: rgb(44, 78, 38)"></div>
-        <span>SES</span>
-      </div>
-      <div>
-        <div class="operator-color" style="backgroundColor: rgb(186, 205, 174)"></div>
-        <span>Telesat</span>
-      </div>
-      <div>
-        <div class="operator-color" style="backgroundColor: rgb(240, 230, 140)"></div>
-        <span>KT Sat</span>
+      <div v-for="(item, index) in operators" :key="index">
+        <div class="operator-color" :style="{backgroundColor: item.color}"></div>
+        <span>{{item.operator}}</span>
       </div>
     </div>
   </div>
@@ -47,6 +15,44 @@
 
 <script>
 export default {
+  data() {
+    return {
+      operators: [
+        {
+          operator: 'ChinaSatcom',
+          color: 'rgb(172, 60, 40)'
+        },
+        {
+          operator: 'APSTAR',
+          color: 'rgb(186, 84, 90)'
+        },
+        {
+          operator: 'ASIASAT',
+          color: 'rgb(248, 226, 87)'
+        },
+        {
+          operator: 'Intelsat',
+          color: 'rgb(238, 139, 1)'
+        },
+        {
+          operator: 'Eutelsat',
+          color: 'rgb(117, 72, 118)'
+        },
+        {
+          operator: 'JSAT',
+          color: 'rgb(0, 206, 209)'
+        },
+        {
+          operator: 'SES',
+          color: 'rgb(44, 78, 38)'
+        },
+        {
+          operator: 'Telesat',
+          color: 'rgb(186, 205, 174)'
+        },
+      ]
+    }
+  },
   computed: {
     isShow() {
       return this.$store.state.leftPanel.isShowLegend

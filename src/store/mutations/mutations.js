@@ -20,11 +20,15 @@ const mutations = {
   },
 
   // 所有卫星信息面板
-  showAllSat(state) {
-    state.leftPanel.isShowAllSat = true
+  showAllSat(state, payload) {
+    payload === '2dmap' ?
+    state.leftPanel.isShowAllSat2d = true :
+    state.leftPanel.isShowAllSat3d = true
   },
-  closeAllSat(state) {
-    state.leftPanel.isShowAllSat = false
+  closeAllSat(state, payload) {
+    payload === '2dmap' ?
+    state.leftPanel.isShowAllSat2d = false :
+    state.leftPanel.isShowAllSat3d = false
   },
 
   // 右侧信息面板

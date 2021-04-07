@@ -18,7 +18,7 @@
 </template>
 
 <script>
-import { getSatResource } from "@/network/satResource";
+import satResource from "@/data/satResource";
 export default {
   // data
   data() {
@@ -28,7 +28,7 @@ export default {
         {
           key: "satEName",
           label: "卫星名称",
-          width: '140',
+          width: "140",
         },
         {
           key: "satOperator",
@@ -90,29 +90,27 @@ export default {
   },
   // 钩子函数
   created() {
-    if (sessionStorage.getItem("allSatCollection")) {
-      this.satList = JSON.parse(sessionStorage.getItem("allSatCollection"));
-    } else {
-      getSatResource().then((res) => {
-        this.satList = res;
-        sessionStorage.setItem("allSatCollection", JSON.stringify(res));
-      });
-    }
+    this.satList = satResource;
   },
 
   // computed
   computed: {
+    map() {
+      return this.$route.fullPath.indexOf("2dmap") == -1 ? "3dmap" : "2dmap";
+    },
     isShowAllSat() {
-      return this.$store.state.leftPanel.isShowAllSat
-    }
+      return this.map == "2dmap"
+        ? this.$store.state.leftPanel.isShowAllSat2d
+        : this.$store.state.leftPanel.isShowAllSat3d;
+    },
   },
 
   // methods
   methods: {
     closeAllSat() {
-      this.$store.commit('closeAllSat');
-    }
-  }
+      this.$store.commit("closeAllSat", this.map);
+    },
+  },
 };
 </script>
 
@@ -150,16 +148,16 @@ export default {
   background-color: #409eff;
 }
 
-.all-sat /deep/ th > .cell{
+.all-sat /deep/ th > .cell {
   text-align: center;
 }
 
-.all-sat /deep/ .el-table th{
+.all-sat /deep/ .el-table th {
   padding: 0;
   background-color: #409eff;
 }
 
-.all-sat /deep/ .el-table th .cell{
+.all-sat /deep/ .el-table th .cell {
   color: white;
 }
 
@@ -167,7 +165,7 @@ export default {
   display: none;
 }
 
-.all-sat /deep/ .cell{
+.all-sat /deep/ .cell {
   text-align: center;
   color: #7c8e97;
   font-size: 15px;
@@ -177,17 +175,17 @@ export default {
   padding: 0;
 }
 
-.all-sat /deep/ .el-table tr{
+.all-sat /deep/ .el-table tr {
   background-color: #061546;
 }
 
-.all-sat /deep/ .el-table tr:hover > td{
+.all-sat /deep/ .el-table tr:hover > td {
   color: white;
   background-color: #90c0f1;
   cursor: pointer;
 }
 
-.all-sat /deep/ .el-table tr:hover .cell{
+.all-sat /deep/ .el-table tr:hover .cell {
   color: white;
 }
 </style>

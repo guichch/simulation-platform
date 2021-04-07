@@ -46,7 +46,8 @@ export default new Vuex.Store({
       isShowMini: false,
       isShowLegend: false,
       isShowLegendMini: true,
-      isShowAllSat: false,
+      isShowAllSat2d: false,
+      isShowAllSat3d: false,
       isShowEarthPanel: false,
       earthPanelParams: ''
     },

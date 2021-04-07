@@ -21,14 +21,6 @@
 
 <script>
 import { addPointEarthStation, clearPointEarthStation, clearPointEarthStation2 } from "@/common/Map/EarthStation/EarthStationOperation";
-import ChinaSatcom from '@/data/EarthList/ChinaSatcom'
-import APSTAR from '@/data/EarthList/APSTAR'
-import ASIASAT from '@/data/EarthList/ASIASAT'
-import Intelsat from '@/data/EarthList/Intelsat'
-import Eutelsat from '@/data/EarthList/Eutelsat'
-import Telesat from '@/data/EarthList/Telesat'
-import SES from '@/data/EarthList/SES'
-import JSAT from '@/data/EarthList/JSAT'
 export default {
   // data 开始
   data() {
@@ -74,6 +66,7 @@ export default {
   watch: {
     selectedOperatorList(newValue) {
       this.currentEarthList = [];
+      let current = []
       const map =
         this.$route.fullPath.indexOf("2dmap") == -1 ? "3dmap" : "2dmap";
       map == '2dmap' ? clearPointEarthStation2() : clearPointEarthStation()
@@ -81,8 +74,9 @@ export default {
         if (element !== "others") {
           import(`@/data/EarthList/${element}`).then((res) => {
             this.currentEarthList.push(...res.default);
-            addPointEarthStation(this.currentEarthList, map);
-            this.currentEarthList = []
+            current.push(...res.default);
+            addPointEarthStation(current, map);
+            current = []
           });
         }
       });

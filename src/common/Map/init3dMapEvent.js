@@ -51,26 +51,4 @@ export default function (Vue) {
       })
     }
   }, ScreenSpaceEventType.MOUSE_MOVE)
-
-  handler.setInputAction(function () { //三维球放大缩小事件
-    if (searchedSatCollectionLength > 100) {
-      var height = viewer.camera.positionCartographic.height;
-      if (height < 9000000) { //低于900万公里的话
-        viewer._dataSourceCollection._dataSources[0]._entityCollection._entities._array.forEach(f => { //隐藏卫星点
-          f._show = false
-        })
-        viewer._dataSourceCollection._dataSources[1]._entityCollection._entities._array.forEach(f1 => { //显示卫星图标
-          f1._show = true
-        })
-      }
-      if (height > 9000000) { //高于900万公里的话
-        viewer._dataSourceCollection._dataSources[0]._entityCollection._entities._array.forEach(f => { //显示卫星点
-          f._show = true
-        })
-        viewer._dataSourceCollection._dataSources[1]._entityCollection._entities._array.forEach(f1 => { //隐藏卫星图标
-          f1._show = false
-        })
-      }
-    }
-  }, ScreenSpaceEventType.WHEEL);
 }

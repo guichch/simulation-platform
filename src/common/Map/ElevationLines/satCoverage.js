@@ -1,5 +1,5 @@
 import { viewer } from "../init3dMap"
-import { Color, Cartesian3, Entity, LabelStyle, NearFarScalar } from "cesium"
+import { Color, Cartesian3, Entity } from "cesium"
 import { Lmap } from "../init2dMap";
 import * as L from 'leaflet';
 
@@ -59,11 +59,11 @@ export const addSurfaceBeam2DMap = (data) => {
   if (data && data.color) {
     _Color = data.color; //获取波束面对应的颜色
   }
-  if (_Color == null) {
+  console.log(_Color)
+  if (_Color === null) {
     satResource.forEach(d => {
       if (data.satname == d.satEName) {
         _Color = "rgb(" + d.operatorColorDark + ")"
-        console.log(_Color)
       }
     }) //获取卫星对应的波束面的颜色
   }

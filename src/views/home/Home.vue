@@ -3,8 +3,8 @@
     <home-menu />
     <tab />
     <Map />
-    <right-panel-tab></right-panel-tab>
-    <right-panel />
+    <!-- <right-panel-tab></right-panel-tab> -->
+    <!-- <right-panel /> -->
     <chart-panel />
     <foot-status />
     <time-line />    
@@ -17,10 +17,9 @@ import Tab from "@/components/common/Tab";
 import FootStatus from "@/components/common/FootStatus";
 import TimeLine from "@/components/timeline/TimeLine.vue";
 import ChartPanel from "@/components/lefttool/ChartPanel.vue";
-import RightPanel from '@/components/righttool/RightPanel.vue'
+// import RightPanel from '@/components/righttool/RightPanel.vue'
 import Map from '@/components/map/Map.vue';
-import RightPanelTab from '@/components/righttool/RightPanelTab.vue';
-import satResource from '@/data/satResource.json'
+// import RightPanelTab from '@/components/righttool/RightPanelTab.vue';
 export default {
   components: {
     HomeMenu,
@@ -28,9 +27,9 @@ export default {
     FootStatus,
     TimeLine,
     ChartPanel,
-    RightPanel,
+    // RightPanel,
     Map,
-    RightPanelTab
+    // RightPanelTab
   }
 };
 </script>
